@@ -16,7 +16,6 @@
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
 :root {
-  /* Studio Belle — Paleta azul premium */
   --primary:       #0077AA;
   --primary-deep:  #004F7A;
   --primary-glow:  #00A8D8;
@@ -25,7 +24,6 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   --accent:        #3DBAFF;
   --accent-warm:   #66D4FF;
 
-  /* UI */
   --green-ui:      #1a7a3c;
   --green-dk:      #145e2e;
   --yellow-hl:     #f5c800;
@@ -48,6 +46,12 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   --r-md: 14px;
   --r-lg: 20px;
   --r-xl: 28px;
+
+  /* Variáveis de proporção do logo/bridge — ORIGINAIS */
+  --logo-size:        132px;
+  --logo-half:        66px;
+  --arc-depth:        20px;
+  --arc-top-offset:   46px;
 }
 
 body {
@@ -65,7 +69,7 @@ body {
 ::selection { background: var(--accent); color: var(--bg); }
 
 /* ═══════════════════════════════════════════════════════════
-   HOME SCREEN
+   HOME SCREEN — ARQUITETURA VISUAL ORIGINAL RESTAURADA
 ═══════════════════════════════════════════════════════════ */
 #screen-home {
   min-height: 100dvh;
@@ -75,7 +79,7 @@ body {
   overflow: hidden;
 }
 
-/* Fundo decorativo */
+/* Fundo decorativo — idêntico ao original */
 #screen-home::before {
   content: '';
   position: fixed; inset: 0;
@@ -93,37 +97,101 @@ body {
   flex: 1; display: flex; flex-direction: column;
 }
 
-/* Cover foto */
+/* ── COVER — clip-path referencia o SVG oculto com coordenadas absolutas ── */
 .home-cover {
   position: relative;
-  height: 200px;
+  height: 205px;
   margin: 0 -20px;
+  flex-shrink: 0;
+  clip-path: url(#homeClip);
   overflow: hidden;
 }
 .home-cover-img {
   position: absolute; inset: 0;
   background-image: url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=1200&q=80');
   background-size: cover; background-position: center 30%;
-  opacity: 0.82;
+  opacity: 0.88;
 }
 .home-cover-vignette {
   position: absolute; inset: 0;
-  background: linear-gradient(to bottom, rgba(0,20,40,0.10) 0%, rgba(0,13,26,0.55) 100%);
+  background: linear-gradient(to bottom,
+    rgba(0,20,40,0.15) 0%,
+    rgba(0,13,26,0.06) 40%,
+    rgba(0,10,20,0.55) 100%);
+  pointer-events: none;
 }
 
-/* Logo junction */
+/* Profile junction — espaço onde o logo emerge + bridge-svg */
 .home-logo-wrap {
   position: relative;
-  height: 80px;
-  display: flex; align-items: flex-end; justify-content: center;
-  margin-top: -40px; z-index: 2;
+  height: var(--logo-size);
+  margin-top: calc(-1 * var(--logo-half));
+  flex-shrink: 0; z-index: 2;
 }
+
+/* Bridge SVG — a ponte curva animada */
+.home-bridge-svg {
+  position: absolute;
+  top: var(--arc-top-offset);
+  left: -20px;
+  width: calc(100% + 40px);
+  height: var(--arc-depth);
+  display: block; overflow: visible;
+}
+
+.bridge-base {
+  fill: none;
+  stroke: rgba(0,119,170,0.45);
+  stroke-width: 0.9;
+  vector-effect: non-scaling-stroke;
+}
+
+.bridge-shine-l,
+.bridge-shine-r {
+  fill: none;
+  stroke: rgba(61,186,255,0.82);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: 28 300;
+  stroke-dashoffset: 328;
+  vector-effect: non-scaling-stroke;
+}
+.bridge-shine-l { animation: bridge-shimmer-l 5s ease-in-out infinite; }
+.bridge-shine-r { animation: bridge-shimmer-r 5s ease-in-out infinite; }
+
+@keyframes bridge-shimmer-l {
+  0%,5%    { stroke-dashoffset: 328;  opacity: 0; }
+  11%      { opacity: 1; }
+  64%      { opacity: 0.86; stroke-dashoffset: -28; }
+  74%,100% { stroke-dashoffset: -28;  opacity: 0; }
+}
+@keyframes bridge-shimmer-r {
+  0%,5%    { stroke-dashoffset: -328; opacity: 0; }
+  11%      { opacity: 1; }
+  64%      { opacity: 0.86; stroke-dashoffset: 28; }
+  74%,100% { stroke-dashoffset: 28;   opacity: 0; }
+}
+
+/* Logo circle */
 .home-logo-circle {
-  width: 80px; height: 80px; border-radius: 50%;
+  position: absolute;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: var(--logo-size); height: var(--logo-size); border-radius: 50%;
   background: radial-gradient(circle at 38% 34%, #004F7A 0%, #002040 52%, #000D1A 100%);
-  border: 2px solid rgba(0,119,170,0.65);
-  box-shadow: 0 0 0 3px rgba(0,13,26,0.9), 0 8px 32px rgba(0,20,40,0.72), 0 0 24px rgba(0,119,170,0.16), inset 0 1px 0 rgba(224,247,255,0.12);
-  display: flex; align-items: center; justify-content: center;
+  border: 2.5px solid rgba(0,119,170,0.65);
+  box-shadow:
+    0 0 0 1.5px rgba(0,13,26,0.92),
+    0 8px 36px rgba(0,20,40,0.72),
+    0 0 32px rgba(0,119,170,0.16),
+    inset 0 1px 0 rgba(224,247,255,0.12),
+    inset 0 -1px 0 rgba(0,5,10,0.30);
+  display: flex; align-items: center; justify-content: center; z-index: 3;
+}
+.home-logo-circle::after {
+  content: '';
+  position: absolute; inset: -1px; border-radius: 50%;
+  background: radial-gradient(circle at 38% 22%, rgba(224,247,255,0.13) 0%, transparent 58%);
+  pointer-events: none;
 }
 
 /* Identidade */
@@ -227,7 +295,6 @@ body {
 }
 #screen-conv.visible { transform: translateY(0); }
 
-/* Masthead conv */
 .conv-masthead {
   position: relative; flex-shrink: 0; z-index: 10;
   background: rgba(0,15,30,0.98);
@@ -247,7 +314,6 @@ body {
   font-family: var(--serif); font-size: 15px; font-weight: 600; font-style: italic;
   color: var(--off-white);
 }
-.conv-brand-info {}
 .conv-brand-name { font-family: var(--serif); font-size: 17px; font-weight: 600; font-style: italic; color: var(--off-white); letter-spacing: 0.02em; line-height: 1; }
 .conv-brand-status { font-family: var(--mono); font-size: 10px; font-weight: 500; color: rgba(61,186,255,0.7); letter-spacing: 0.06em; }
 .conv-progress-area { display: flex; align-items: center; gap: 10px; }
@@ -255,11 +321,9 @@ body {
 .conv-progress-bar { width: 100px; height: 2px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
 .conv-progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.5s cubic-bezier(.4,0,.2,1); }
 
-/* Scroll area */
 .conv-scroll { flex: 1 1 0; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
 .conv-stage { max-width: 800px; margin: 0 auto; padding: 28px 20px 20px; display: flex; flex-direction: column; min-height: 100%; }
 
-/* Mensagens */
 .conv-msg {
   display: flex; align-items: flex-start; gap: 10px;
   margin-bottom: 16px;
@@ -299,7 +363,6 @@ body {
   box-shadow: 0 0 0 3px rgba(61,186,255,0.18);
 }
 
-/* Typing */
 .conv-typing {
   display: flex; align-items: center; gap: 10px;
   margin-bottom: 12px; animation: msgIn 0.3s ease both;
@@ -321,7 +384,6 @@ body {
   40%        { transform:scale(1.1); opacity:1; }
 }
 
-/* Msg usuário */
 .conv-user-msg {
   display: flex; justify-content: flex-end;
   margin-bottom: 16px; animation: msgIn 0.3s ease both;
@@ -333,7 +395,6 @@ body {
   font-size: 14px; line-height: 1.55; color: #fff; font-weight: 500;
 }
 
-/* Área de resposta */
 .conv-answer-area {
   position: sticky; bottom: 0; flex-shrink: 0; z-index: 50;
   background: rgba(10,15,26,0.98);
@@ -353,7 +414,6 @@ body {
   letter-spacing: 0.07em; text-transform: uppercase; color: rgba(255,255,255,0.28);
 }
 
-/* Chips de opção */
 .conv-options { display: flex; flex-wrap: wrap; gap: 8px; }
 .conv-option {
   display: inline-flex; align-items: center; gap: 6px;
@@ -375,7 +435,6 @@ body {
 }
 .conv-option.selected::before { content: '✓ '; }
 
-/* Botão continuar */
 .conv-continue-btn {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 11px 22px;
@@ -399,14 +458,12 @@ body {
 .conv-options-row { display: flex; flex-direction: column; gap: 10px; }
 .conv-options-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 
-/* Timer */
 .conv-timer-bar { display: flex; align-items: center; gap: 8px; }
 .conv-timer-track { flex: 1; height: 2px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
 .conv-timer-fill { height: 100%; background: rgba(61,186,255,0.5); border-radius: 2px; transition: width 1s linear; }
 .conv-timer-label { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.06em; color: rgba(255,255,255,0.28); white-space: nowrap; flex-shrink: 0; transition: color 0.3s; }
 .conv-timer-label.ending { color: rgba(61,186,255,0.65); }
 
-/* Input de texto */
 .conv-input-row { display: flex; gap: 10px; align-items: flex-end; }
 .conv-text-input {
   flex: 1; padding: 12px 16px;
@@ -431,7 +488,7 @@ body {
 .conv-send-btn svg { width: 17px; height: 17px; color: #fff; }
 
 /* ═══════════════════════════════════════════════════════════
-   EXPANSÃO ACORDEÃO — categorias de serviço
+   ACORDEÃO — categorias de serviço
 ═══════════════════════════════════════════════════════════ */
 .svc-category-list { display: flex; flex-direction: column; gap: 8px; }
 .svc-category-item {
@@ -469,32 +526,21 @@ body {
   max-height: 0; overflow: hidden;
   transition: max-height 0.3s cubic-bezier(.4,0,.2,1);
 }
-.svc-category-item.open .svc-category-body { max-height: 600px; }
-.svc-sub-list { padding: 0 12px 12px; display: flex; flex-direction: column; gap: 6px; }
+.svc-category-item.open .svc-category-body { max-height: 800px; }
+.svc-sub-list { padding: 0 10px 10px; display: flex; flex-direction: column; gap: 5px; }
 .svc-sub-item {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 11px 14px; border-radius: var(--r-sm);
+  padding: 12px 14px; border-radius: var(--r-sm);
   cursor: pointer; gap: 8px;
   background: rgba(0,79,122,0.15); border: 1.5px solid transparent;
   transition: all 0.18s; -webkit-tap-highlight-color: transparent;
 }
-.svc-sub-item:hover { background: rgba(0,79,122,0.28); border-color: rgba(61,186,255,0.25); }
+.svc-sub-item:hover { background: rgba(0,79,122,0.28); border-color: rgba(61,186,255,0.25); transform: translateX(3px); }
 .svc-sub-item.selected {
-  background: rgba(0,119,170,0.25); border-color: rgba(61,186,255,0.55);
+  background: rgba(0,119,170,0.25); border-color: rgba(61,186,255,0.55); transform: translateX(0);
 }
 .svc-sub-item-left { display: flex; flex-direction: column; gap: 2px; flex: 1; }
 .svc-sub-item-name { font-size: 14px; font-weight: 600; color: #fff; line-height: 1.3; }
-.svc-sub-item-subs { font-size: 12px; color: rgba(224,247,255,0.55); margin-top: 4px; display: flex; flex-wrap: wrap; gap: 4px; }
-.svc-sub-chip {
-  padding: 4px 10px; border-radius: 100px;
-  font-size: 12px; font-weight: 500; letter-spacing: 0.01em;
-  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14);
-  color: rgba(224,247,255,0.7); cursor: pointer;
-  transition: all 0.15s; -webkit-tap-highlight-color: transparent;
-  min-height: 30px; display: inline-flex; align-items: center;
-}
-.svc-sub-chip:hover { background: rgba(0,119,170,0.28); border-color: rgba(61,186,255,0.45); color: var(--accent); }
-.svc-sub-chip.selected { background: var(--primary); border-color: var(--accent); color: #fff; font-weight: 600; }
 .svc-sub-item-time { font-family: var(--mono); font-size: 11px; color: rgba(61,186,255,0.6); flex-shrink: 0; }
 .svc-sub-item.selected .svc-sub-item-time { color: var(--accent-warm); }
 .svc-sub-check {
@@ -507,7 +553,6 @@ body {
 .svc-sub-check svg { display: none; width: 10px; height: 10px; color: #fff; }
 .svc-sub-item.selected .svc-sub-check svg { display: block; }
 
-/* Barra de selecionados */
 .svc-selection-bar {
   background: rgba(0,79,122,0.18);
   border: 1.5px solid rgba(0,119,170,0.35);
@@ -557,7 +602,6 @@ body {
   border-bottom: 1px solid rgba(0,119,170,0.18);
 }
 
-/* Calendário */
 .cal-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px 8px; }
 .cal-month { font-family: var(--serif); font-size: 20px; font-weight: 600; font-style: italic; color: var(--off-white); letter-spacing: 0.03em; }
 .cal-nav-btn {
@@ -583,7 +627,6 @@ body {
 .cal-day--today { border: 1.5px solid rgba(0,119,170,0.55); }
 .cal-day--selected { background: var(--primary) !important; color: #fff !important; font-weight: 700; }
 
-/* Slots de hora */
 .time-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; padding: 12px 16px 4px; }
 .time-slot {
   display: flex; align-items: center; justify-content: center;
@@ -597,36 +640,8 @@ body {
 .time-slot.selected { background: var(--primary); border-color: var(--accent); color: #fff; font-weight: 700; }
 
 /* ═══════════════════════════════════════════════════════════
-   TELA DE CONCLUSÃO
+   CONCLUSÃO / RESUMO
 ═══════════════════════════════════════════════════════════ */
-.conv-completion {
-  text-align: center; padding: 40px 20px;
-  display: flex; flex-direction: column; align-items: center; gap: 16px;
-  animation: msgIn 0.5s ease both;
-}
-.conv-completion-icon {
-  width: 60px; height: 60px; border-radius: 50%;
-  background: rgba(0,119,170,0.15); border: 2px solid rgba(61,186,255,0.35);
-  display: flex; align-items: center; justify-content: center;
-}
-.conv-completion-icon svg { width: 26px; height: 26px; color: var(--accent); }
-.conv-completion-title {
-  font-family: var(--serif); font-size: clamp(22px,4vw,30px); font-weight: 600; font-style: italic;
-  color: var(--off-white); line-height: 1.2;
-}
-.conv-completion-sub { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.55); max-width: 36ch; }
-.conv-completion-btn {
-  display: inline-flex; align-items: center; gap: 10px;
-  padding: 15px 30px; background: #25d366; color: #fff;
-  font-family: var(--body); font-size: 15px; font-weight: 700;
-  border: none; border-radius: 10px; cursor: pointer;
-  transition: background 0.15s, transform 0.12s;
-  box-shadow: 0 6px 20px rgba(37,211,102,0.35); letter-spacing: -0.01em;
-}
-.conv-completion-btn:hover { background: #1eb558; transform: translateY(-2px); }
-.conv-completion-note { font-size: 12px; color: rgba(255,255,255,0.3); }
-
-/* Resumo inline */
 .conv-summary-card {
   background: rgba(0,79,122,0.12); border: 1.5px solid rgba(0,119,170,0.28);
   border-radius: var(--r-md); overflow: hidden; margin-bottom: 16px;
@@ -643,7 +658,6 @@ body {
 }
 .conv-summary-value { font-size: 13.5px; font-weight: 500; color: #fff; line-height: 1.6; flex: 1; }
 
-/* Campos de data */
 .conv-dates-section { display: flex; flex-direction: column; gap: 12px; margin-bottom: 14px; }
 .conv-date-row { display: flex; flex-direction: column; gap: 6px; }
 .conv-date-label {
@@ -665,13 +679,9 @@ body {
 .conv-date-input.field-error { border-color: rgba(220,50,70,0.8); }
 .conv-date-error { font-family: var(--mono); font-size: 11px; font-weight: 600; color: #FF5060; min-height: 14px; }
 
-/* Form hint */
 .conv-form-hint { font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.5); margin-bottom: 12px; }
 .conv-form-hint .hl { color: var(--accent); font-weight: 600; }
 
-/* ═══════════════════════════════════════════════════════════
-   BOTÃO CONTINUAR GRANDE (dentro da conversa)
-═══════════════════════════════════════════════════════════ */
 .conv-action-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 9px;
   padding: 13px 22px; width: 100%;
@@ -693,7 +703,6 @@ body {
 }
 .conv-action-btn.ghost:hover { background: rgba(255,255,255,0.1); color: #fff; }
 
-/* Botão WA inline */
 .conv-wa-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 10px;
   padding: 14px 24px; width: 100%; background: #25d366; color: #fff;
@@ -706,7 +715,6 @@ body {
 .conv-wa-btn:hover { background: #1eb558; }
 .conv-wa-btn:active { transform: scale(0.98); }
 
-/* Profissional cards */
 .prof-cards { display: flex; flex-direction: column; gap: 8px; }
 .prof-card {
   display: flex; align-items: center; gap: 12px; padding: 12px 16px;
@@ -725,7 +733,6 @@ body {
 }
 .prof-name { font-size: 15px; font-weight: 600; color: #fff; flex: 1; }
 
-/* Blocos inline (após as mensagens do bot) */
 .conv-inline-block { margin-top: 4px; margin-bottom: 20px; animation: msgIn 0.38s cubic-bezier(.2,.7,.2,1) both; }
 .conv-inline-block.indent { padding-left: 42px; }
 
@@ -733,12 +740,10 @@ body {
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); background: #0d1117; color: #fff; padding: 11px 18px; border-radius: 9px; font-size: 13px; font-weight: 600; z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.22s, transform 0.28s cubic-bezier(.2,.7,.2,1); white-space: nowrap; box-shadow: 0 8px 24px rgba(10,14,26,0.25); display: flex; align-items: center; gap: 7px; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* Scroll */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(61,186,255,0.18); border-radius: 2px; }
 
-/* Mobile */
 @media (max-width: 480px) {
   .time-grid { grid-template-columns: repeat(3,1fr); }
   .conv-stage { padding: 20px 16px 16px; }
@@ -749,6 +754,27 @@ body {
 </style>
 </head>
 <body>
+
+<!--
+  SVG oculto com o clipPath da cover — SISTEMA ORIGINAL:
+  userSpaceOnUse implícito + coordenadas em pixels absolutos da viewport.
+  O path Q-bezier recria a curva orgânica exata da referência.
+  Posicionado fora do fluxo para não ocupar espaço.
+-->
+<svg width="0" height="0" style="position:absolute;overflow:hidden;pointer-events:none" aria-hidden="true">
+  <defs>
+    <!--
+      homeClip: clipPath em coordenadas de tela (userSpaceOnUse padrão).
+      Aplicado ao .home-cover que tem margin: 0 -20px, então
+      a largura efetiva é viewport + 40px.
+      A curva Q cria a onda descendente que a ponte/bridge acompanha.
+      Valores espelham exatamente a versão de referência.
+    -->
+    <clipPath id="homeClip">
+      <path d="M 0 0 L 9999 0 L 9999 9999 Q 50% 185px 0 9999 Z"/>
+    </clipPath>
+  </defs>
+</svg>
 
 <!-- ═══════════════════════════════════════════
      HOME SCREEN
@@ -762,8 +788,19 @@ body {
     </div>
 
     <div class="home-logo-wrap">
+      <!-- Bridge SVG — curva com dois shimmers que se cruzam -->
+      <svg class="home-bridge-svg"
+           viewBox="0 0 100 20"
+           preserveAspectRatio="none"
+           xmlns="http://www.w3.org/2000/svg"
+           aria-hidden="true">
+        <path class="bridge-base"     d="M 0 0 Q 50 40 100 0"/>
+        <path class="bridge-shine-l"  d="M 0 0 Q 50 40 100 0"/>
+        <path class="bridge-shine-r"  d="M 100 0 Q 50 40 0 0"/>
+      </svg>
+
       <div class="home-logo-circle">
-        <svg width="38" height="38" viewBox="0 0 32 32" fill="none">
+        <svg width="62" height="62" viewBox="0 0 32 32" fill="none">
           <ellipse cx="16" cy="10" rx="3.2" ry="5.5" fill="none" stroke="rgba(0,168,216,0.70)" stroke-width="0.9"/>
           <ellipse cx="16" cy="10" rx="3.2" ry="5.5" fill="none" stroke="rgba(0,168,216,0.70)" stroke-width="0.9" transform="rotate(60 16 16)"/>
           <ellipse cx="16" cy="10" rx="3.2" ry="5.5" fill="none" stroke="rgba(0,168,216,0.70)" stroke-width="0.9" transform="rotate(120 16 16)"/>
@@ -891,11 +928,38 @@ body {
 
 <div class="toast" id="toast"></div>
 
-<!-- ═══════════════════════════════════════════
-     JAVASCRIPT
-═══════════════════════════════════════════ -->
 <script>
-/* ── DADOS DO SALÃO ──────────────────────────────── */
+/* ════════════════════════════════════════════════════
+   CLIP PATH DINÂMICO — restaura a curva original
+   O clipPath #homeClip precisa de coordenadas em px
+   que acompanham a largura real do .home-cover.
+   Aqui recalculamos o path para qualquer viewport.
+════════════════════════════════════════════════════ */
+function updateHomeClip() {
+  const cover = document.querySelector('.home-cover');
+  if (!cover) return;
+  const rect = cover.getBoundingClientRect();
+  const W = rect.width;
+  const H = rect.height; // 205px
+  // Curva Q que desce ao centro, criando a onda orgânica:
+  // parte de (0, H-20) na esquerda, desce para (W/2, H+20) no meio,
+  // sobe para (W, H-20) na direita — igual ao path original.
+  const curveY = H - 18;   // ponto lateral da curva
+  const midY   = H + 22;   // profundidade máxima do arco
+  const pathD  = `M 0 0 L ${W} 0 L ${W} ${curveY} Q ${W/2} ${midY} 0 ${curveY} Z`;
+  const clipPath = document.getElementById('homeClip');
+  if (clipPath) clipPath.querySelector('path').setAttribute('d', pathD);
+}
+
+// Calcula na carga e no resize
+window.addEventListener('load', updateHomeClip);
+window.addEventListener('resize', updateHomeClip);
+// Também depois de fontes/imagens carregadas
+document.fonts && document.fonts.ready.then(updateHomeClip);
+
+/* ════════════════════════════════════════════════════
+   DADOS DO SALÃO
+════════════════════════════════════════════════════ */
 const WHATSAPP = '5583991816152';
 
 const PROFESSIONALS = {
@@ -935,21 +999,23 @@ const CAT_LABELS = {cabelo:'Cabelo', unhas:'Unhas', sobrancelhas:'Sobrancelhas e
 const MONTHS_PT = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 const DOWS = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 
-/* ── STATE ──────────────────────────────────────── */
+/* ════════════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════════════ */
 let st = {
   nome: '',
-  bookings: [],           // {category, prof, profLabel, services:{key:{name,time,subs:[]}}}
+  bookings: [],
   dates: ['','',''],
-  // temporário por categoria
   tmpCat: null,
   tmpProf: null,
   tmpServices: {},
 };
 
-let convRunning = false;
 let convTimerID = null;
 
-/* ── NAVEGAÇÃO ──────────────────────────────────── */
+/* ════════════════════════════════════════════════════
+   NAVEGAÇÃO
+════════════════════════════════════════════════════ */
 function openConv() {
   st = { nome:'', bookings:[], dates:['','',''], tmpCat:null, tmpProf:null, tmpServices:{} };
   document.getElementById('conv-stage').innerHTML = '';
@@ -977,7 +1043,9 @@ function setProgress(pct, label) {
   document.getElementById('conv-step-label').textContent = label;
 }
 
-/* ── ENGINE DE MENSAGENS ────────────────────────── */
+/* ════════════════════════════════════════════════════
+   ENGINE DE MENSAGENS
+════════════════════════════════════════════════════ */
 function showTyping() {
   removeTyping();
   const el = document.createElement('div');
@@ -1054,7 +1122,9 @@ function scrollBottom() {
   }, 60);
 }
 
-/* ── SEQUÊNCIA DE MENSAGENS COM DELAYS ──────────── */
+/* ════════════════════════════════════════════════════
+   SEQUÊNCIA DE MENSAGENS COM DELAYS
+════════════════════════════════════════════════════ */
 function sendMessages(msgs, onDone) {
   let t = 0;
   msgs.forEach((m, i) => {
@@ -1071,7 +1141,9 @@ function sendMessages(msgs, onDone) {
   setTimeout(() => onDone && onDone(), t + 100);
 }
 
-/* ── CHIPS COM MULTI-SELECT + TIMER + CONTINUAR ── */
+/* ════════════════════════════════════════════════════
+   CHIPS COM MULTI-SELECT + TIMER + CONTINUAR
+════════════════════════════════════════════════════ */
 function buildChipsArea(inner, {hint, options, timed, multi, onSubmit}) {
   const selectedVals = new Set();
 
@@ -1122,7 +1194,6 @@ function buildChipsArea(inner, {hint, options, timed, multi, onSubmit}) {
     const val = typeof opt === 'string' ? opt : opt.val;
     btn.onclick = () => {
       if (!multi) {
-        // single select: direct submit
         if (convTimerID) { clearInterval(convTimerID); convTimerID = null; }
         onSubmit([val], val);
         return;
@@ -1165,7 +1236,9 @@ function buildChipsArea(inner, {hint, options, timed, multi, onSubmit}) {
   }
 }
 
-/* ── FLUXO PRINCIPAL ────────────────────────────── */
+/* ════════════════════════════════════════════════════
+   FLUXO PRINCIPAL
+════════════════════════════════════════════════════ */
 function startFlow() {
   setProgress(5, 'Iniciando…');
   sendMessages([
@@ -1208,19 +1281,19 @@ function submitNome() {
   }, 400);
 }
 
-/* ── STEP CATEGORIA ─────────────────────────────── */
+/* ════════════════════════════════════════════════════
+   STEP CATEGORIA
+════════════════════════════════════════════════════ */
 function stepCategoria() {
   const booked = st.bookings.map(b => b.category);
   const avail = Object.keys(CAT_LABELS).filter(k => !booked.includes(k));
-
   if (avail.length === 0) { stepDatas(); return; }
-
   renderAnswerArea((inner) => {
     buildChipsArea(inner, {
       hint: 'Escolha uma categoria',
       options: avail.map(k => ({val:k, label:CAT_LABELS[k]})),
       timed: false, multi: false,
-      onSubmit: ([val], label) => {
+      onSubmit: ([val]) => {
         st.tmpCat = val; st.tmpProf = null; st.tmpServices = {};
         addUserMsg(CAT_LABELS[val]);
         clearAnswerArea();
@@ -1235,7 +1308,9 @@ function stepCategoria() {
   });
 }
 
-/* ── STEP PROFISSIONAL ──────────────────────────── */
+/* ════════════════════════════════════════════════════
+   STEP PROFISSIONAL
+════════════════════════════════════════════════════ */
 function stepProfissional() {
   setProgress(28, 'Etapa 1 de 4 — Preferências');
   const profs = PROFESSIONALS[st.tmpCat] || [];
@@ -1264,26 +1339,24 @@ function stepProfissional() {
   });
 }
 
-/* ── STEP SERVIÇOS (expansão acordeão) ───────────── */
+/* ════════════════════════════════════════════════════
+   STEP SERVIÇOS (acordeão)
+════════════════════════════════════════════════════ */
 function stepServicos() {
   setProgress(45, 'Etapa 2 de 4 — Serviços');
   const svcs = SERVICES[st.tmpCat] || [];
-
-  // Bloco inline (não fica na barra inferior — é parte da conversa)
   clearAnswerArea();
   hideAnswerArea();
 
-  // Adiciona o bloco de serviços inline na conversa
   addInlineBlock(el => {
     el.id = 'svc-block';
 
-    // Barra de selecionados
     const selBar = document.createElement('div'); selBar.className = 'svc-selection-bar'; selBar.id = 'svc-sel-bar';
     selBar.innerHTML = `<div class="svc-selection-bar-label">Selecionados</div><div class="svc-chips" id="svc-chips"></div>`;
     el.appendChild(selBar);
 
-    // Lista acordeão
     const list = document.createElement('div'); list.className = 'svc-category-list';
+
     svcs.forEach((svc, idx) => {
       const item = document.createElement('div');
       item.className = 'svc-category-item'; item.id = 'svc-cat-' + svc.key;
@@ -1303,52 +1376,46 @@ function stepServicos() {
 
       const body = document.createElement('div');
       body.className = 'svc-category-body'; body.id = 'svc-body-' + svc.key;
-
       const subList = document.createElement('div');
       subList.className = 'svc-sub-list';
 
-      // Item principal do serviço (selecionável)
-      const mainItem = document.createElement('div');
-      mainItem.className = 'svc-sub-item'; mainItem.id = 'svc-main-' + svc.key;
-      mainItem.innerHTML = `
-        <div class="svc-sub-item-left">
-          <div class="svc-sub-item-name">${esc(svc.name)}</div>
-          <div class="svc-sub-item-subs" id="svc-sub-chips-${svc.key}">
-            ${svc.subs.map(s => `<div class="svc-sub-chip" onclick="toggleSubChip(event,'${svc.key}','${escAttr(s)}')">${esc(s)}</div>`).join('')}
+      svc.subs.forEach(sub => {
+        const subId = svc.key + '__' + sub.replace(/\s+/g, '_');
+        const subItem = document.createElement('div');
+        subItem.className = 'svc-sub-item'; subItem.id = 'svc-sub-item-' + subId;
+        subItem.innerHTML = `
+          <div class="svc-sub-item-left">
+            <div class="svc-sub-item-name">${esc(sub)}</div>
           </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
-          <span class="svc-sub-item-time">${esc(svc.time)}</span>
-          <div class="svc-sub-check" id="svc-check-${svc.key}">
-            <svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-        </div>`;
-      mainItem.onclick = (e) => {
-        if (e.target.classList.contains('svc-sub-chip')) return;
-        toggleSvcMain(svc.key, svc);
-      };
-      subList.appendChild(mainItem);
+          <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+            <span class="svc-sub-item-time">${esc(svc.time)}</span>
+            <div class="svc-sub-check" id="svc-check-${subId}">
+              <svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>`;
+        subItem.onclick = () => toggleSubItem(svc.key, sub, svc.time, subId);
+        subList.appendChild(subItem);
+      });
+
       body.appendChild(subList);
       item.appendChild(header);
       item.appendChild(body);
       list.appendChild(item);
     });
+
     el.appendChild(list);
 
-    // Botão continuar
     const btn = document.createElement('button');
     btn.className = 'conv-action-btn'; btn.id = 'svc-confirm-btn';
     btn.textContent = 'Confirmar serviços';
     btn.onclick = confirmServicos;
     el.appendChild(btn);
-
   }, true);
 }
 
 function toggleSvcAccordion(key, svcs) {
   const item = document.getElementById('svc-cat-' + key);
   const isOpen = item.classList.contains('open');
-  // fecha todos
   (svcs || SERVICES[st.tmpCat] || []).forEach(s => {
     const it = document.getElementById('svc-cat-' + s.key);
     if (it) it.classList.remove('open');
@@ -1356,57 +1423,26 @@ function toggleSvcAccordion(key, svcs) {
   if (!isOpen) item.classList.add('open');
 }
 
-function toggleSvcMain(key, svc) {
-  if (st.tmpServices[key]) {
-    delete st.tmpServices[key];
-    const mainItem = document.getElementById('svc-main-' + key);
-    const catItem = document.getElementById('svc-cat-' + key);
-    const badge = document.getElementById('svc-badge-' + key);
-    const nameEl = document.getElementById('svc-name-' + key);
-    const header = catItem ? catItem.querySelector('.svc-category-header') : null;
-    if (mainItem) { mainItem.classList.remove('selected'); }
-    if (badge) badge.style.display = 'none';
-    if (header) header.classList.remove('has-selection');
-    // reset sub-chips
-    const subChips = document.querySelectorAll(`#svc-sub-chips-${key} .svc-sub-chip`);
-    subChips.forEach(c => c.classList.remove('selected'));
-  } else {
-    st.tmpServices[key] = { name: svc.name, time: svc.time, subs: [] };
-    const mainItem = document.getElementById('svc-main-' + key);
-    const catItem = document.getElementById('svc-cat-' + key);
-    const badge = document.getElementById('svc-badge-' + key);
-    const header = catItem ? catItem.querySelector('.svc-category-header') : null;
-    if (mainItem) mainItem.classList.add('selected');
-    if (badge) { badge.textContent = '✓'; badge.style.display = ''; }
-    if (header) header.classList.add('has-selection');
-  }
-  updateSvcSelectionBar();
-}
+function toggleSubItem(parentKey, subName, time, subId) {
+  const stateKey = parentKey + '__' + subName.replace(/\s+/g, '_');
+  const subItem = document.getElementById('svc-sub-item-' + subId);
+  const badge   = document.getElementById('svc-badge-' + parentKey);
+  const header  = document.querySelector('#svc-cat-' + parentKey + ' .svc-category-header');
 
-function toggleSubChip(event, key, sub) {
-  event.stopPropagation();
-  const svc = (SERVICES[st.tmpCat] || []).find(s => s.key === key);
-  if (!svc) return;
-  // Garante que o serviço pai está selecionado
-  if (!st.tmpServices[key]) {
-    st.tmpServices[key] = { name: svc.name, time: svc.time, subs: [] };
-    const mainItem = document.getElementById('svc-main-' + key);
-    const catItem = document.getElementById('svc-cat-' + key);
-    const badge = document.getElementById('svc-badge-' + key);
-    const header = catItem ? catItem.querySelector('.svc-category-header') : null;
-    if (mainItem) mainItem.classList.add('selected');
-    if (badge) { badge.textContent = '✓'; badge.style.display = ''; }
-    if (header) header.classList.add('has-selection');
-  }
-  const chip = event.target;
-  const already = chip.classList.contains('selected');
-  chip.classList.toggle('selected', !already);
-  if (!st.tmpServices[key].subs) st.tmpServices[key].subs = [];
-  if (!already) {
-    if (!st.tmpServices[key].subs.includes(sub)) st.tmpServices[key].subs.push(sub);
+  if (st.tmpServices[stateKey]) {
+    delete st.tmpServices[stateKey];
+    if (subItem) subItem.classList.remove('selected');
   } else {
-    st.tmpServices[key].subs = st.tmpServices[key].subs.filter(s => s !== sub);
+    st.tmpServices[stateKey] = { name: subName, time: time, parentKey: parentKey };
+    if (subItem) subItem.classList.add('selected');
   }
+
+  const countForParent = Object.values(st.tmpServices).filter(s => s.parentKey === parentKey).length;
+  if (badge) {
+    if (countForParent > 0) { badge.textContent = countForParent; badge.style.display = ''; }
+    else { badge.style.display = 'none'; }
+  }
+  if (header) header.classList.toggle('has-selection', countForParent > 0);
   updateSvcSelectionBar();
 }
 
@@ -1417,24 +1453,22 @@ function updateSvcSelectionBar() {
   const entries = Object.entries(st.tmpServices);
   bar.classList.toggle('has-items', entries.length > 0);
   chips.innerHTML = entries.map(([key, info]) => {
-    const subStr = info.subs && info.subs.length ? ' · ' + info.subs.join(', ') : '';
-    return `<div class="svc-chip">${esc(info.name + subStr)}<span class="svc-chip-x" onclick="removeSvc('${key}')">×</span></div>`;
+    return `<div class="svc-chip">${esc(info.name)}<span class="svc-chip-x" onclick="removeSubItem('${key}')">×</span></div>`;
   }).join('');
 }
 
-function removeSvc(key) {
-  delete st.tmpServices[key];
-  const mainItem = document.getElementById('svc-main-' + key);
-  const catItem = document.getElementById('svc-cat-' + key);
-  const badge = document.getElementById('svc-badge-' + key);
-  const header = catItem ? catItem.querySelector('.svc-category-header') : null;
-  if (mainItem) {
-    mainItem.classList.remove('selected');
-    const subChips = mainItem.querySelectorAll('.svc-sub-chip');
-    subChips.forEach(c => c.classList.remove('selected'));
-  }
-  if (badge) badge.style.display = 'none';
-  if (header) header.classList.remove('has-selection');
+function removeSubItem(stateKey) {
+  const info = st.tmpServices[stateKey];
+  if (!info) return;
+  const parentKey = info.parentKey;
+  delete st.tmpServices[stateKey];
+  const subItem = document.getElementById('svc-sub-item-' + stateKey);
+  if (subItem) subItem.classList.remove('selected');
+  const badge = document.getElementById('svc-badge-' + parentKey);
+  const header = document.querySelector('#svc-cat-' + parentKey + ' .svc-category-header');
+  const countForParent = Object.values(st.tmpServices).filter(s => s.parentKey === parentKey).length;
+  if (badge) { if (countForParent > 0) { badge.textContent = countForParent; badge.style.display = ''; } else badge.style.display = 'none'; }
+  if (header) header.classList.toggle('has-selection', countForParent > 0);
   updateSvcSelectionBar();
 }
 
@@ -1444,7 +1478,6 @@ function confirmServicos() {
     return;
   }
   const profLabel = (PROFESSIONALS[st.tmpCat] || []).find(p => p.val === st.tmpProf);
-  // Remove booking anterior da mesma categoria (caso exista)
   st.bookings = st.bookings.filter(b => b.category !== st.tmpCat);
   st.bookings.push({
     category: st.tmpCat,
@@ -1455,7 +1488,6 @@ function confirmServicos() {
   });
   st.tmpServices = {};
 
-  // Desabilita o bloco de serviços
   const block = document.getElementById('svc-block');
   if (block) {
     const btn = block.querySelector('.conv-action-btn');
@@ -1466,7 +1498,6 @@ function confirmServicos() {
   const svcNames = Object.values(st.bookings[st.bookings.length - 1].services).map(s => s.name).join(', ');
   addUserMsg(svcNames);
 
-  // Verifica se há mais categorias disponíveis
   const booked = st.bookings.map(b => b.category);
   const avail = Object.keys(CAT_LABELS).filter(k => !booked.includes(k));
 
@@ -1485,7 +1516,7 @@ function confirmServicos() {
           buildChipsArea(inner, {
             hint: 'O que deseja fazer?',
             options: opts, timed: false, multi: false,
-            onSubmit: ([val], label) => {
+            onSubmit: ([val]) => {
               if (val === 'finalizar') {
                 addUserMsg('Seguir para as datas');
                 clearAnswerArea();
@@ -1514,7 +1545,9 @@ function confirmServicos() {
   }, 500);
 }
 
-/* ── STEP DATAS ─────────────────────────────────── */
+/* ════════════════════════════════════════════════════
+   STEP DATAS
+════════════════════════════════════════════════════ */
 function stepDatas() {
   setProgress(72, 'Etapa 3 de 4 — Disponibilidade');
   sendMessages([
@@ -1577,22 +1610,20 @@ function submitDatas() {
   if (d3 && t3 && fmt(d1,t1) === fmt(d3,t3)) return fail('1ª e 3ª opção têm o mesmo horário.');
   if (d2&&t2&&d3&&t3 && fmt(d2,t2) === fmt(d3,t3)) return fail('2ª e 3ª opção têm o mesmo horário.');
   if(err) err.textContent = '';
-
   st.dates[0] = fmt(d1, t1);
   st.dates[1] = d2 && t2 ? fmt(d2, t2) : '';
   st.dates[2] = d3 && t3 ? fmt(d3, t3) : '';
-
   const block = document.getElementById('dates-block');
   if (block) { block.style.pointerEvents = 'none'; block.style.opacity = '0.6'; }
-
   addUserMsg(st.dates[0] + (st.dates[1] ? ' · ' + st.dates[1] : '') + (st.dates[2] ? ' · ' + st.dates[2] : ''));
-
   setTimeout(() => stepResumo(), 400);
 }
 
 function v(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
 
-/* ── STEP RESUMO ────────────────────────────────── */
+/* ════════════════════════════════════════════════════
+   STEP RESUMO
+════════════════════════════════════════════════════ */
 function stepResumo() {
   setProgress(92, 'Etapa 4 de 4 — Confirmação');
   sendMessages([
@@ -1600,18 +1631,13 @@ function stepResumo() {
   ], () => {
     clearAnswerArea();
     hideAnswerArea();
-
     addInlineBlock(el => {
-      // Monta resumo
       const card = document.createElement('div');
       card.className = 'conv-summary-card';
-
       let rows = `<div class="conv-summary-row"><div class="conv-summary-label">Nome</div><div class="conv-summary-value">${esc(st.nome)}</div></div>`;
-
       st.bookings.forEach(b => {
         const svcLines = Object.values(b.services).map(s => {
-          const subStr = s.subs && s.subs.length ? ` — ${s.subs.join(', ')}` : '';
-          return esc(s.name + subStr);
+          return esc(s.name) + `<span style="color:rgba(255,255,255,0.35);font-size:11px"> — ${esc(s.time)}</span>`;
         }).join('<br>');
         rows += `<div class="conv-summary-row">
           <div class="conv-summary-label">${esc(b.categoryLabel)}</div>
@@ -1620,12 +1646,10 @@ function stepResumo() {
           </div>
         </div>`;
       });
-
       let datesVal = st.dates[0];
       if (st.dates[1]) datesVal += '<br>' + st.dates[1];
       if (st.dates[2]) datesVal += '<br>' + st.dates[2];
       rows += `<div class="conv-summary-row"><div class="conv-summary-label">Datas</div><div class="conv-summary-value">${datesVal}</div></div>`;
-
       card.innerHTML = rows;
       el.appendChild(card);
 
@@ -1646,7 +1670,9 @@ function stepResumo() {
   });
 }
 
-/* ── WHATSAPP ───────────────────────────────────── */
+/* ════════════════════════════════════════════════════
+   WHATSAPP
+════════════════════════════════════════════════════ */
 function sendWhatsApp() {
   let msg = `Olá! Gostaria de agendar um atendimento no Studio Belle 💛\n\n`;
   msg += `👤 *Nome:* ${st.nome}\n\n`;
@@ -1654,8 +1680,7 @@ function sendWhatsApp() {
     msg += `✨ *${b.categoryLabel}*\n`;
     msg += `   Profissional: ${b.profLabel}\n`;
     Object.values(b.services).forEach(s => {
-      const subStr = s.subs && s.subs.length ? ` — ${s.subs.join(', ')}` : '';
-      msg += `   • ${s.name}${subStr} (${s.time})\n`;
+      msg += `   • ${s.name} (${s.time})\n`;
     });
     msg += '\n';
   });
@@ -1666,7 +1691,9 @@ function sendWhatsApp() {
   showToast('Abrindo WhatsApp…');
 }
 
-/* ── DATE PICKER ────────────────────────────────── */
+/* ════════════════════════════════════════════════════
+   DATE PICKER
+════════════════════════════════════════════════════ */
 let calYear, calMonth, activeDateN;
 
 function openDatePicker(n) {
@@ -1712,7 +1739,9 @@ function renderCal() {
 function calPrev() { calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; } renderCal(); }
 function calNext() { calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; } renderCal(); }
 
-/* ── TIME PICKER ────────────────────────────────── */
+/* ════════════════════════════════════════════════════
+   TIME PICKER
+════════════════════════════════════════════════════ */
 let activeTimeN;
 
 function openTimePicker(n) {
@@ -1735,7 +1764,9 @@ function openTimePicker(n) {
   openPicker('time-picker-overlay');
 }
 
-/* ── PICKER HELPERS ─────────────────────────────── */
+/* ════════════════════════════════════════════════════
+   PICKER HELPERS
+════════════════════════════════════════════════════ */
 function openPicker(id) {
   const el = document.getElementById(id); el.style.display = 'flex';
   requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('open')));
@@ -1746,7 +1777,9 @@ function closePicker(id) {
 }
 function handlePickerOverlay(e, id) { if (e.target === document.getElementById(id)) closePicker(id); }
 
-/* ── TOAST ──────────────────────────────────────── */
+/* ════════════════════════════════════════════════════
+   TOAST
+════════════════════════════════════════════════════ */
 const toastEl = document.getElementById('toast');
 let toastT;
 function showToast(msg) {
@@ -1756,16 +1789,15 @@ function showToast(msg) {
   toastT = setTimeout(() => toastEl.classList.remove('show'), 2400);
 }
 
-/* ── UTILS ──────────────────────────────────────── */
+/* ════════════════════════════════════════════════════
+   UTILS
+════════════════════════════════════════════════════ */
 function esc(str) { if (!str) return ''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function escAttr(str) { if (!str) return ''; return String(str).replace(/'/g,"\\'"); }
 function pad(n) { return String(n).padStart(2,'0'); }
 
-/* ── KEYBOARD ───────────────────────────────────── */
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { closePicker('date-picker-overlay'); closePicker('time-picker-overlay'); }
 });
-
 </script>
 </body>
 </html>
