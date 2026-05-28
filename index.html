@@ -960,38 +960,132 @@ document.fonts && document.fonts.ready.then(updateHomeClip);
 /* ════════════════════════════════════════════════════
    DADOS DO SALÃO
 ════════════════════════════════════════════════════ */
-const WHATSAPP = '5583991816152';
+const WHATSAPP = '5583998508419';
+
+/* 
+  AJUSTE:
+  Agora todas as categorias utilizam:
+  - Letícia
+  - Júlia
+  - Sem preferência
+
+  Mantendo exatamente a mesma lógica atual do sistema.
+*/
+
+const GLOBAL_PROFESSIONALS = [
+  { val:'leticia', name:'Letícia' },
+  { val:'julia',   name:'Júlia' },
+  { val:'sem',     name:'Sem preferência' },
+];
 
 const PROFESSIONALS = {
-  cabelo:        [{val:'leticia',name:'Letícia'}, {val:'thais',name:'Thaís'}, {val:'sem',name:'Sem preferência'}],
-  unhas:         [{val:'maria',name:'Maria'}, {val:'carla',name:'Carla'}, {val:'sem',name:'Sem preferência'}],
-  sobrancelhas:  [{val:'julia',name:'Júlia'}, {val:'fernanda',name:'Fernanda'}, {val:'sem',name:'Sem preferência'}],
-  estetica:      [{val:'luisa',name:'Luísa'}, {val:'clarinha',name:'Clarinha'}, {val:'sem',name:'Sem preferência'}],
+  cabelo: GLOBAL_PROFESSIONALS,
+  unhas: GLOBAL_PROFESSIONALS,
+  sobrancelhas: GLOBAL_PROFESSIONALS,
+  estetica: GLOBAL_PROFESSIONALS,
 };
 
 const SERVICES = {
   cabelo: [
-    {key:'corte',      name:'Corte',               time:'45–60 min',   subs:['Feminino','Masculino','Infantil']},
-    {key:'escova',     name:'Escova e finalização', time:'40–70 min',   subs:['Escova','Babyliss','Penteados']},
-    {key:'coloracao',  name:'Coloração',            time:'90–180 min',  subs:['Coloração','Luzes','Mechas','Tonalização']},
-    {key:'tratamento', name:'Tratamentos',          time:'50–70 min',   subs:['Hidratação','Reconstrução','Nutrição']},
-    {key:'transform',  name:'Transformação',        time:'150–180 min', subs:['Progressiva','Botox capilar','Alisamento']},
+    {
+      key:'corte',
+      name:'Corte',
+      time:'45–60 min',
+      subs:['Feminino','Masculino','Infantil']
+    },
+    {
+      key:'escova',
+      name:'Escova e finalização',
+      time:'40–70 min',
+      subs:['Escova','Babyliss','Penteados']
+    },
+    {
+      key:'coloracao',
+      name:'Coloração',
+      time:'90–180 min',
+      subs:['Coloração','Luzes','Mechas','Tonalização']
+    },
+    {
+      key:'tratamento',
+      name:'Tratamentos',
+      time:'50–70 min',
+      subs:['Hidratação','Reconstrução','Nutrição']
+    },
+    {
+      key:'transform',
+      name:'Transformação',
+      time:'150–180 min',
+      subs:['Progressiva','Botox capilar','Alisamento']
+    },
   ],
+
   unhas: [
-    {key:'cuidados',   name:'Cuidados',             time:'40–50 min', subs:['Manicure','Pedicure']},
-    {key:'esmaltacao', name:'Esmaltação',            time:'30–60 min', subs:['Esmalte comum','Gel']},
-    {key:'estrutura',  name:'Estrutura',             time:'120 min',   subs:['Alongamento']},
-    {key:'nailart',    name:'Nail art',              time:'45 min',    subs:['Decoração']},
+    {
+      key:'cuidados',
+      name:'Cuidados',
+      time:'40–50 min',
+      subs:['Manicure','Pedicure']
+    },
+    {
+      key:'esmaltacao',
+      name:'Esmaltação',
+      time:'30–60 min',
+      subs:['Esmalte comum','Gel']
+    },
+    {
+      key:'estrutura',
+      name:'Estrutura',
+      time:'120 min',
+      subs:['Alongamento']
+    },
+    {
+      key:'nailart',
+      name:'Nail art',
+      time:'45 min',
+      subs:['Decoração']
+    },
   ],
+
   sobrancelhas: [
-    {key:'sobrancelha',name:'Sobrancelhas',         time:'30–120 min', subs:['Design','Henna','Micropigmentação']},
-    {key:'cilios',     name:'Cílios',               time:'70–120 min', subs:['Alongamento','Lifting']},
+    {
+      key:'sobrancelha',
+      name:'Sobrancelhas',
+      time:'30–120 min',
+      subs:['Design','Henna','Micropigmentação']
+    },
+    {
+      key:'cilios',
+      name:'Cílios',
+      time:'70–120 min',
+      subs:['Alongamento','Lifting']
+    },
   ],
+
   estetica: [
-    {key:'maquiagem',  name:'Maquiagem',            time:'60–90 min', subs:['Social','Eventos']},
-    {key:'pele',       name:'Pele',                 time:'90 min',    subs:['Limpeza de pele']},
-    {key:'corporal',   name:'Corporal',             time:'60 min',    subs:['Depilação','Massagem']},
-    {key:'facial',     name:'Tratamentos',          time:'75–90 min', subs:['Facial','Corporal']},
+    {
+      key:'maquiagem',
+      name:'Maquiagem',
+      time:'60–90 min',
+      subs:['Social','Eventos']
+    },
+    {
+      key:'pele',
+      name:'Pele',
+      time:'90 min',
+      subs:['Limpeza de pele']
+    },
+    {
+      key:'corporal',
+      name:'Corporal',
+      time:'60 min',
+      subs:['Depilação','Massagem']
+    },
+    {
+      key:'facial',
+      name:'Tratamentos',
+      time:'75–90 min',
+      subs:['Facial','Corporal']
+    },
   ],
 };
 
