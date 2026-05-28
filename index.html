@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <title>Studio Belle — Agendamento</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,7 +47,6 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   --r-lg: 20px;
   --r-xl: 28px;
 
-  /* Variáveis de proporção do logo/bridge — ORIGINAIS */
   --logo-size:        132px;
   --logo-half:        66px;
   --arc-depth:        20px;
@@ -69,7 +68,19 @@ body {
 ::selection { background: var(--accent); color: var(--bg); }
 
 /* ═══════════════════════════════════════════════════════════
-   HOME SCREEN — ARQUITETURA VISUAL ORIGINAL RESTAURADA
+   ANTI-ZOOM — iOS Safari / Chrome mobile
+   font-size >= 16px em todos os campos interativos
+   impede o zoom automático nativo ao focar inputs.
+═══════════════════════════════════════════════════════════ */
+input,
+textarea,
+select {
+  font-size: 16px !important;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HOME SCREEN
 ═══════════════════════════════════════════════════════════ */
 #screen-home {
   min-height: 100dvh;
@@ -79,7 +90,6 @@ body {
   overflow: hidden;
 }
 
-/* Fundo decorativo — idêntico ao original */
 #screen-home::before {
   content: '';
   position: fixed; inset: 0;
@@ -97,7 +107,6 @@ body {
   flex: 1; display: flex; flex-direction: column;
 }
 
-/* ── COVER — clip-path referencia o SVG oculto com coordenadas absolutas ── */
 .home-cover {
   position: relative;
   height: 205px;
@@ -121,7 +130,6 @@ body {
   pointer-events: none;
 }
 
-/* Profile junction — espaço onde o logo emerge + bridge-svg */
 .home-logo-wrap {
   position: relative;
   height: var(--logo-size);
@@ -129,7 +137,6 @@ body {
   flex-shrink: 0; z-index: 2;
 }
 
-/* Bridge SVG — a ponte curva animada */
 .home-bridge-svg {
   position: absolute;
   top: var(--arc-top-offset);
@@ -172,7 +179,6 @@ body {
   74%,100% { stroke-dashoffset: 28;   opacity: 0; }
 }
 
-/* Logo circle */
 .home-logo-circle {
   position: absolute;
   top: 0; left: 50%; transform: translateX(-50%);
@@ -194,7 +200,6 @@ body {
   pointer-events: none;
 }
 
-/* Identidade */
 .home-identity {
   text-align: center;
   padding: 16px 0 12px;
@@ -211,7 +216,6 @@ body {
 }
 .home-tagline em { font-style: normal; color: var(--accent); font-weight: 500; }
 
-/* Divisor */
 .home-divider {
   display: flex; align-items: center; gap: 14px;
   margin: 20px 0;
@@ -232,7 +236,6 @@ body {
   92%,100%{ opacity:0.7; transform:rotate(45deg) scale(1); filter:brightness(1); }
 }
 
-/* Botões home */
 .home-actions { display: flex; flex-direction: column; gap: 12px; padding-bottom: 32px; }
 
 .home-btn-primary {
@@ -283,7 +286,7 @@ body {
 .home-footer-text { font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
 
 /* ═══════════════════════════════════════════════════════════
-   CONV SCREEN — estilo WhatsApp
+   CONV SCREEN
 ═══════════════════════════════════════════════════════════ */
 #screen-conv {
   position: fixed; inset: 0; z-index: 200;
@@ -470,7 +473,7 @@ body {
   background: rgba(255,255,255,0.06);
   border: 1.5px solid rgba(255,255,255,0.12);
   border-radius: 10px; color: #fff;
-  font-family: var(--body); font-size: 15px; font-weight: 400;
+  font-family: var(--body); font-size: 16px; font-weight: 400;
   outline: none; transition: border-color 0.18s, background 0.18s;
   resize: none; line-height: 1.5;
 }
@@ -670,7 +673,7 @@ body {
 .conv-date-input, .conv-time-input {
   flex: 1; padding: 11px 14px;
   background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.12);
-  border-radius: 8px; color: #fff; font-family: var(--body); font-size: 14px; font-weight: 500;
+  border-radius: 8px; color: #fff; font-family: var(--body); font-size: 16px; font-weight: 500;
   cursor: pointer; outline: none; transition: border-color 0.18s;
   -webkit-appearance: none; appearance: none;
 }
@@ -755,30 +758,15 @@ body {
 </head>
 <body>
 
-<!--
-  SVG oculto com o clipPath da cover — SISTEMA ORIGINAL:
-  userSpaceOnUse implícito + coordenadas em pixels absolutos da viewport.
-  O path Q-bezier recria a curva orgânica exata da referência.
-  Posicionado fora do fluxo para não ocupar espaço.
--->
 <svg width="0" height="0" style="position:absolute;overflow:hidden;pointer-events:none" aria-hidden="true">
   <defs>
-    <!--
-      homeClip: clipPath em coordenadas de tela (userSpaceOnUse padrão).
-      Aplicado ao .home-cover que tem margin: 0 -20px, então
-      a largura efetiva é viewport + 40px.
-      A curva Q cria a onda descendente que a ponte/bridge acompanha.
-      Valores espelham exatamente a versão de referência.
-    -->
     <clipPath id="homeClip">
       <path d="M 0 0 L 9999 0 L 9999 9999 Q 50% 185px 0 9999 Z"/>
     </clipPath>
   </defs>
 </svg>
 
-<!-- ═══════════════════════════════════════════
-     HOME SCREEN
-═══════════════════════════════════════════ -->
+<!-- HOME SCREEN -->
 <div id="screen-home">
   <div class="home-inner">
 
@@ -788,7 +776,6 @@ body {
     </div>
 
     <div class="home-logo-wrap">
-      <!-- Bridge SVG — curva com dois shimmers que se cruzam -->
       <svg class="home-bridge-svg"
            viewBox="0 0 100 20"
            preserveAspectRatio="none"
@@ -860,9 +847,7 @@ body {
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     CONV SCREEN
-═══════════════════════════════════════════ -->
+<!-- CONV SCREEN -->
 <div id="screen-conv">
 
   <header class="conv-masthead">
@@ -891,9 +876,7 @@ body {
 
 </div>
 
-<!-- ═══════════════════════════════════════════
-     DATE PICKER
-═══════════════════════════════════════════ -->
+<!-- DATE PICKER -->
 <div class="picker-overlay" id="date-picker-overlay" onclick="handlePickerOverlay(event,'date-picker-overlay')">
   <div class="picker-panel">
     <div class="picker-drag"><span></span></div>
@@ -914,9 +897,7 @@ body {
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     TIME PICKER
-═══════════════════════════════════════════ -->
+<!-- TIME PICKER -->
 <div class="picker-overlay" id="time-picker-overlay" onclick="handlePickerOverlay(event,'time-picker-overlay')">
   <div class="picker-panel">
     <div class="picker-drag"><span></span></div>
@@ -930,47 +911,29 @@ body {
 
 <script>
 /* ════════════════════════════════════════════════════
-   CLIP PATH DINÂMICO — restaura a curva original
-   O clipPath #homeClip precisa de coordenadas em px
-   que acompanham a largura real do .home-cover.
-   Aqui recalculamos o path para qualquer viewport.
+   CLIP PATH DINÂMICO
 ════════════════════════════════════════════════════ */
 function updateHomeClip() {
   const cover = document.querySelector('.home-cover');
   if (!cover) return;
   const rect = cover.getBoundingClientRect();
   const W = rect.width;
-  const H = rect.height; // 205px
-  // Curva Q que desce ao centro, criando a onda orgânica:
-  // parte de (0, H-20) na esquerda, desce para (W/2, H+20) no meio,
-  // sobe para (W, H-20) na direita — igual ao path original.
-  const curveY = H - 18;   // ponto lateral da curva
-  const midY   = H + 22;   // profundidade máxima do arco
+  const H = rect.height;
+  const curveY = H - 18;
+  const midY   = H + 22;
   const pathD  = `M 0 0 L ${W} 0 L ${W} ${curveY} Q ${W/2} ${midY} 0 ${curveY} Z`;
   const clipPath = document.getElementById('homeClip');
   if (clipPath) clipPath.querySelector('path').setAttribute('d', pathD);
 }
 
-// Calcula na carga e no resize
 window.addEventListener('load', updateHomeClip);
 window.addEventListener('resize', updateHomeClip);
-// Também depois de fontes/imagens carregadas
 document.fonts && document.fonts.ready.then(updateHomeClip);
 
 /* ════════════════════════════════════════════════════
    DADOS DO SALÃO
 ════════════════════════════════════════════════════ */
 const WHATSAPP = '5583998508419';
-
-/* 
-  AJUSTE:
-  Agora todas as categorias utilizam:
-  - Letícia
-  - Júlia
-  - Sem preferência
-
-  Mantendo exatamente a mesma lógica atual do sistema.
-*/
 
 const GLOBAL_PROFESSIONALS = [
   { val:'leticia', name:'Letícia' },
@@ -987,105 +950,27 @@ const PROFESSIONALS = {
 
 const SERVICES = {
   cabelo: [
-    {
-      key:'corte',
-      name:'Corte',
-      time:'45–60 min',
-      subs:['Feminino','Masculino','Infantil']
-    },
-    {
-      key:'escova',
-      name:'Escova e finalização',
-      time:'40–70 min',
-      subs:['Escova','Babyliss','Penteados']
-    },
-    {
-      key:'coloracao',
-      name:'Coloração',
-      time:'90–180 min',
-      subs:['Coloração','Luzes','Mechas','Tonalização']
-    },
-    {
-      key:'tratamento',
-      name:'Tratamentos',
-      time:'50–70 min',
-      subs:['Hidratação','Reconstrução','Nutrição']
-    },
-    {
-      key:'transform',
-      name:'Transformação',
-      time:'150–180 min',
-      subs:['Progressiva','Botox capilar','Alisamento']
-    },
+    { key:'corte',     name:'Corte',                time:'45–60 min',   subs:['Feminino','Masculino','Infantil'] },
+    { key:'escova',    name:'Escova e finalização',  time:'40–70 min',   subs:['Escova','Babyliss','Penteados'] },
+    { key:'coloracao', name:'Coloração',             time:'90–180 min',  subs:['Coloração','Luzes','Mechas','Tonalização'] },
+    { key:'tratamento',name:'Tratamentos',           time:'50–70 min',   subs:['Hidratação','Reconstrução','Nutrição'] },
+    { key:'transform', name:'Transformação',         time:'150–180 min', subs:['Progressiva','Botox capilar','Alisamento'] },
   ],
-
   unhas: [
-    {
-      key:'cuidados',
-      name:'Cuidados',
-      time:'40–50 min',
-      subs:['Manicure','Pedicure']
-    },
-    {
-      key:'esmaltacao',
-      name:'Esmaltação',
-      time:'30–60 min',
-      subs:['Esmalte comum','Gel']
-    },
-    {
-      key:'estrutura',
-      name:'Estrutura',
-      time:'120 min',
-      subs:['Alongamento']
-    },
-    {
-      key:'nailart',
-      name:'Nail art',
-      time:'45 min',
-      subs:['Decoração']
-    },
+    { key:'cuidados',  name:'Cuidados',   time:'40–50 min',  subs:['Manicure','Pedicure'] },
+    { key:'esmaltacao',name:'Esmaltação', time:'30–60 min',  subs:['Esmalte comum','Gel'] },
+    { key:'estrutura', name:'Estrutura',  time:'120 min',    subs:['Alongamento'] },
+    { key:'nailart',   name:'Nail art',   time:'45 min',     subs:['Decoração'] },
   ],
-
   sobrancelhas: [
-    {
-      key:'sobrancelha',
-      name:'Sobrancelhas',
-      time:'30–120 min',
-      subs:['Design','Henna','Micropigmentação']
-    },
-    {
-      key:'cilios',
-      name:'Cílios',
-      time:'70–120 min',
-      subs:['Alongamento','Lifting']
-    },
+    { key:'sobrancelha',name:'Sobrancelhas', time:'30–120 min', subs:['Design','Henna','Micropigmentação'] },
+    { key:'cilios',      name:'Cílios',       time:'70–120 min', subs:['Alongamento','Lifting'] },
   ],
-
   estetica: [
-    {
-      key:'maquiagem',
-      name:'Maquiagem',
-      time:'60–90 min',
-      subs:['Social','Eventos']
-    },
-    {
-      key:'pele',
-      name:'Pele',
-      time:'90 min',
-      subs:['Limpeza de pele']
-    },
-    {
-      key:'corporal',
-      name:'Corporal',
-      time:'60 min',
-      subs:['Depilação','Massagem']
-    },
-    {
-      key:'facial',
-      name:'Tratamentos',
-      time:'75–90 min',
-      subs:['Facial','Corporal']
-    },
+    { key:'maquiagem', name:'Maquiagem',    time:'60–90 min', subs:['Social','Eventos'] },
+    { key:'pele',      name:'Pele',         time:'90 min',    subs:['Limpeza de pele'] },
+    { key:'corporal',  name:'Corporal',     time:'60 min',    subs:['Depilação','Massagem'] },
+    { key:'facial',    name:'Tratamentos',  time:'75–90 min', subs:['Facial','Corporal'] },
   ],
 };
 
@@ -1096,15 +981,7 @@ const DOWS = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 /* ════════════════════════════════════════════════════
    STATE
 ════════════════════════════════════════════════════ */
-let st = {
-  nome: '',
-  bookings: [],
-  dates: ['','',''],
-  tmpCat: null,
-  tmpProf: null,
-  tmpServices: {},
-};
-
+let st = { nome:'', bookings:[], dates:['','',''], tmpCat:null, tmpProf:null, tmpServices:{} };
 let convTimerID = null;
 
 /* ════════════════════════════════════════════════════
@@ -1223,14 +1100,10 @@ function sendMessages(msgs, onDone) {
   let t = 0;
   msgs.forEach((m, i) => {
     const delay = m.delay || 0;
-    setTimeout(() => {
-      if (i > 0) showTyping();
-    }, delay);
+    setTimeout(() => { if (i > 0) showTyping(); }, delay);
     const msgDelay = delay + (i > 0 ? 850 : 0);
     t = msgDelay + 300;
-    setTimeout(() => {
-      addBotMsg(m.html, m.insight || false);
-    }, msgDelay);
+    setTimeout(() => { addBotMsg(m.html, m.insight || false); }, msgDelay);
   });
   setTimeout(() => onDone && onDone(), t + 100);
 }
@@ -1773,9 +1646,7 @@ function sendWhatsApp() {
   st.bookings.forEach(b => {
     msg += `✨ *${b.categoryLabel}*\n`;
     msg += `   Profissional: ${b.profLabel}\n`;
-    Object.values(b.services).forEach(s => {
-      msg += `   • ${s.name} (${s.time})\n`;
-    });
+    Object.values(b.services).forEach(s => { msg += `   • ${s.name} (${s.time})\n`; });
     msg += '\n';
   });
   msg += `📅 *Disponibilidade:*\n   1ª opção: ${st.dates[0]}`;
