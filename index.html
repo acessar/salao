@@ -579,19 +579,31 @@ select {
 
 /* ═══════════════════════════════════════════════════════════
    PICKER — DATA / HORA
+   CORREÇÃO DE RESPONSIVIDADE MOBILE:
+   - overflow-x: hidden no overlay e no panel
+   - width: 100% + box-sizing no panel
+   - time-grid totalmente contido com box-sizing
+   - time-slot com min-width: 0 para evitar overflow em grid
 ═══════════════════════════════════════════════════════════ */
 .picker-overlay {
   position: fixed; inset: 0; z-index: 500;
   display: flex; align-items: flex-end; justify-content: center;
   background: rgba(0,5,10,0); pointer-events: none;
   transition: background 250ms ease;
+  overflow: hidden; /* ← impede que children vazem para fora da viewport */
 }
 .picker-overlay.open { background: rgba(0,5,10,0.85); pointer-events: auto; }
+
 .picker-panel {
   background: linear-gradient(170deg, #001830 0%, #003D6B 100%);
   border: 1px solid rgba(0,119,170,0.4);
   border-radius: 16px 16px 0 0; padding: 0 0 32px;
   width: 100%; max-width: 600px;
+  /* CORREÇÃO: garante que o painel não exceda 100vw e que padding
+     não some à largura total no mobile */
+  box-sizing: border-box;
+  /* CORREÇÃO: elimina scroll horizontal interno */
+  overflow-x: hidden;
   transform: translateY(100%); transition: transform 320ms cubic-bezier(0.25,0.46,0.45,0.94);
   max-height: 80dvh; overflow-y: auto;
 }
@@ -630,14 +642,38 @@ select {
 .cal-day--today { border: 1.5px solid rgba(0,119,170,0.55); }
 .cal-day--selected { background: var(--primary) !important; color: #fff !important; font-weight: 700; }
 
-.time-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; padding: 12px 16px 4px; }
+/* ─── TIME GRID — CORREÇÃO PRINCIPAL ─────────────────────
+   Problema: no mobile o grid de 4 colunas com padding lateral
+   gerava overflow horizontal porque as colunas somadas ao padding
+   ultrapassavam 100vw.
+
+   Solução:
+   1. box-sizing: border-box — padding contido na largura total
+   2. width: 100% — respeita o container pai
+   3. As 4 colunas permanecem no desktop (≥ 481px)
+   4. No mobile (≤ 480px) cai para 3 colunas com padding reduzido
+────────────────────────────────────────────────────────── */
+.time-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  padding: 12px 16px 4px;
+  box-sizing: border-box; /* ← CORREÇÃO: padding não soma à largura */
+  width: 100%;            /* ← CORREÇÃO: contido no picker-panel */
+}
+
 .time-slot {
   display: flex; align-items: center; justify-content: center;
-  padding: 11px 0; border-radius: 6px;
+  padding: 11px 4px; border-radius: 6px;
   font-family: var(--body); font-size: 14px; font-weight: 500; color: #fff;
   background: rgba(0,79,122,0.18); border: 1.5px solid rgba(224,247,255,0.18);
   cursor: pointer; transition: background 150ms, border-color 150ms;
   -webkit-tap-highlight-color: transparent; min-height: 44px;
+  /* CORREÇÃO: min-width: 0 permite que células de grid encolham
+     abaixo do conteúdo intrínseco, essencial para não vazar */
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 .time-slot:hover { background: rgba(0,79,122,0.38); border-color: rgba(224,247,255,0.45); }
 .time-slot.selected { background: var(--primary); border-color: var(--accent); color: #fff; font-weight: 700; }
@@ -676,6 +712,9 @@ select {
   border-radius: 8px; color: #fff; font-family: var(--body); font-size: 16px; font-weight: 500;
   cursor: pointer; outline: none; transition: border-color 0.18s;
   -webkit-appearance: none; appearance: none;
+  /* CORREÇÃO: impede que inputs de data/hora estourem o container em mobile */
+  min-width: 0;
+  box-sizing: border-box;
 }
 .conv-date-input::placeholder, .conv-time-input::placeholder { color: rgba(255,255,255,0.25); }
 .conv-date-input:focus, .conv-time-input:focus { border-color: rgba(61,186,255,0.55); }
@@ -747,8 +786,33 @@ select {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(61,186,255,0.18); border-radius: 2px; }
 
+/* ═══════════════════════════════════════════════════════════
+   MOBILE BREAKPOINT
+   CORREÇÃO: time-grid cai para 3 colunas e padding é reduzido
+   para garantir que os slots caibam dentro de 100vw.
+   A mudança de 4→3 colunas é calculada para screens ≤ 480px:
+     - viewport típico: ~375px
+     - picker-panel: 100% (375px)
+     - padding lateral: 12px × 2 = 24px → área útil = 351px
+     - 3 colunas + 2 gaps de 5px = (351 - 10) / 3 ≈ 113px por slot ✓
+     - 4 colunas + 3 gaps de 5px = (351 - 15) / 4 ≈ 84px por slot
+       (funciona, mas fica apertado com font-size 14px)
+   3 colunas é o sweet spot para conforto de toque ≥ 44px.
+═══════════════════════════════════════════════════════════ */
 @media (max-width: 480px) {
-  .time-grid { grid-template-columns: repeat(3,1fr); }
+  .time-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    padding: 12px 12px 4px; /* padding reduzido para dar mais espaço às células */
+  }
+  .time-slot {
+    font-size: 13.5px;
+    padding: 11px 2px;
+    min-height: 44px; /* mantém área de toque confortável */
+  }
+  .picker-panel {
+    border-radius: 12px 12px 0 0;
+  }
   .conv-stage { padding: 20px 16px 16px; }
   .conv-answer-area { padding: 10px 16px calc(12px + env(safe-area-inset-bottom,0px)); }
   .conv-option { font-size: 13px; padding: 8px 13px; }
