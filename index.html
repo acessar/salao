@@ -185,12 +185,13 @@ input,textarea,select{font-size:16px!important;-webkit-text-size-adjust:100%}
 .conv-date-label .req{color:var(--accent)}
 .conv-date-label .opt{color:rgba(255,255,255,0.38);font-weight:500}
 .conv-date-inputs{display:flex;gap:8px}
-.conv-date-input,.conv-time-input{flex:1;padding:11px 14px;background:var(--surface-card);border:1.5px solid var(--surface-card-border);border-radius:8px;color:#fff;font-family:var(--body);font-size:16px;font-weight:500;cursor:pointer;outline:none;transition:border-color 0.18s;-webkit-appearance:none;appearance:none;min-width:0;box-sizing:border-box}
+.conv-date-input,.conv-time-input{flex:1;padding:11px 14px;background:rgba(0,0,0,0.25);border:1.5px solid rgba(255,255,255,0.15);border-radius:8px;color:#fff;font-family:var(--body);font-size:16px;font-weight:500;cursor:pointer;outline:none;transition:border-color 0.18s;-webkit-appearance:none;appearance:none;min-width:0;box-sizing:border-box}
 .conv-date-input::placeholder,.conv-time-input::placeholder{color:rgba(255,255,255,0.35)}
 .conv-date-input:focus,.conv-time-input:focus{border-color:rgba(61,186,255,0.65)}
 .conv-date-input.field-error{border-color:rgba(220,50,70,0.8)}
 .conv-date-error{font-family:var(--mono);font-size:11px;font-weight:600;color:#FF5060;min-height:14px}
-.conv-form-hint{font-size:13px;line-height:1.6;color:rgba(255,255,255,0.6);margin-bottom:12px}
+/* AJUSTE — conv-form-hint: texto de dica integrado dentro da conv-bubble */
+.conv-form-hint{font-size:13px;line-height:1.5;color:rgba(255,255,255,0.55);margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08)}
 .conv-form-hint .hl{color:var(--accent);font-weight:600}
 
 /* Botões de ação */
@@ -515,7 +516,7 @@ function stepServicos(){
         const subId=svc.key+'__'+sub.replace(/\s+/g,'_');
         const subItem=document.createElement('div');subItem.className='svc-sub-item';subItem.id='svc-sub-item-'+subId;
         subItem.innerHTML='<div class="svc-sub-item-left"><div class="svc-sub-item-name">'+esc(sub)+'</div></div><div style="display:flex;align-items:center;gap:8px;flex-shrink:0"><span class="svc-sub-item-time">'+esc(svc.time)+'</span><div class="svc-sub-check" id="svc-check-'+subId+'"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>';
-        subItem.onclick=()=>toggleSubItem(svc.key,sub,svc.time,subId);
+        subItem.onclick=()=>toggleSubItem(svc.key,svc.name,sub,svc.time,subId);
         subList.appendChild(subItem);
       });
       body.appendChild(subList);item.appendChild(header);item.appendChild(body);list.appendChild(item);
@@ -531,13 +532,25 @@ function toggleSvcAccordion(key,svcs){
   if(!isOpen)item.classList.add('open');
 }
 
-function toggleSubItem(parentKey,subName,time,subId){
+// AJUSTE 2 — parentName adicionado para salvar "Serviço Principal → Procedimento"
+function toggleSubItem(parentKey,parentName,subName,time,subId){
   const stateKey=parentKey+'__'+subName.replace(/\s+/g,'_');
   const subItem=document.getElementById('svc-sub-item-'+subId);
   const badge=document.getElementById('svc-badge-'+parentKey);
   const header=document.querySelector('#svc-cat-'+parentKey+' .svc-category-header');
-  if(st.tmpServices[stateKey]){delete st.tmpServices[stateKey];if(subItem)subItem.classList.remove('selected');}
-  else{st.tmpServices[stateKey]={name:subName,time:time,parentKey:parentKey};if(subItem)subItem.classList.add('selected');}
+  if(st.tmpServices[stateKey]){
+    delete st.tmpServices[stateKey];
+    if(subItem)subItem.classList.remove('selected');
+  }else{
+    st.tmpServices[stateKey]={
+      name:parentName+' \u2014 '+subName,  // "Corte — Feminino"
+      parentKey:parentKey,
+      parentName:parentName,
+      subName:subName,
+      time:time
+    };
+    if(subItem)subItem.classList.add('selected');
+  }
   const cnt=Object.values(st.tmpServices).filter(s=>s.parentKey===parentKey).length;
   if(badge){if(cnt>0){badge.textContent=cnt;badge.style.display='';}else badge.style.display='none';}
   if(header)header.classList.toggle('has-selection',cnt>0);
@@ -597,10 +610,19 @@ function stepDatas(){
     {html:'Assim conseguimos encontrar o encaixe perfeito na nossa agenda \uD83D\uDC9B',delay:1000,insight:true},
   ],()=>{
     clearAnswerArea();hideAnswerArea();
-    addInlineBlock(el=>{
-      el.id='dates-block';
-      el.innerHTML='<div class="conv-form-hint">Apenas a <span class="hl">1a opcao</span> e obrigatoria.</div><div class="conv-dates-section"><div class="conv-date-row"><span class="conv-date-label">1a opcao <span class="req">*</span></span><div class="conv-date-inputs"><input class="conv-date-input" id="d1" readonly placeholder="Data" onclick="openDatePicker(1)"><input class="conv-time-input" id="t1" readonly placeholder="Horario" onclick="openTimePicker(1)"></div></div><div class="conv-date-row"><span class="conv-date-label">2a opcao <span class="opt">(opcional)</span></span><div class="conv-date-inputs"><input class="conv-date-input" id="d2" readonly placeholder="Data" onclick="openDatePicker(2)"><input class="conv-time-input" id="t2" readonly placeholder="Horario" onclick="openTimePicker(2)"></div></div><div class="conv-date-row"><span class="conv-date-label">3a opcao <span class="opt">(opcional)</span></span><div class="conv-date-inputs"><input class="conv-date-input" id="d3" readonly placeholder="Data" onclick="openDatePicker(3)"><input class="conv-time-input" id="t3" readonly placeholder="Horario" onclick="openTimePicker(3)"></div></div></div><div class="conv-date-error" id="date-error"></div><button class="conv-action-btn" onclick="submitDatas()">Confirmar disponibilidade</button>';
-    },true);
+    const stage=document.getElementById('conv-stage');
+    const wrapper=document.createElement('div');
+    wrapper.className='conv-msg';
+    wrapper.style.animation='msgIn 0.38s cubic-bezier(.2,.7,.2,1) both';
+    wrapper.innerHTML='<div class="conv-avatar">S</div>';
+    const bubble=document.createElement('div');
+    bubble.className='conv-bubble';
+    bubble.style.cssText='max-width:100%;flex:1;padding:16px 18px;';
+    bubble.id='dates-block';
+    bubble.innerHTML='<div class="conv-form-hint">Apenas a <span class="hl">1a opcao</span> e obrigatoria.</div><div class="conv-dates-section"><div class="conv-date-row"><span class="conv-date-label">1a opcao <span class="req">*</span></span><div class="conv-date-inputs"><input class="conv-date-input" id="d1" readonly placeholder="Data" onclick="openDatePicker(1)"><input class="conv-time-input" id="t1" readonly placeholder="Horario" onclick="openTimePicker(1)"></div></div><div class="conv-date-row"><span class="conv-date-label">2a opcao <span class="opt">(opcional)</span></span><div class="conv-date-inputs"><input class="conv-date-input" id="d2" readonly placeholder="Data" onclick="openDatePicker(2)"><input class="conv-time-input" id="t2" readonly placeholder="Horario" onclick="openTimePicker(2)"></div></div><div class="conv-date-row"><span class="conv-date-label">3a opcao <span class="opt">(opcional)</span></span><div class="conv-date-inputs"><input class="conv-date-input" id="d3" readonly placeholder="Data" onclick="openDatePicker(3)"><input class="conv-time-input" id="t3" readonly placeholder="Horario" onclick="openTimePicker(3)"></div></div></div><div class="conv-date-error" id="date-error"></div><button class="conv-action-btn" onclick="submitDatas()">Confirmar disponibilidade</button>';
+    wrapper.appendChild(bubble);
+    stage.appendChild(wrapper);
+    setTimeout(()=>{const sc=document.getElementById('conv-scroll');if(sc)sc.scrollTo({top:sc.scrollHeight,behavior:'smooth'});},60);
   });
 }
 
@@ -621,7 +643,7 @@ function submitDatas(){
   if(d2&&t2&&d3&&t3&&fmt(d2,t2)===fmt(d3,t3))return fail('2a e 3a opcao tem o mesmo horario.');
   if(err)err.textContent='';
   st.dates[0]=fmt(d1,t1);st.dates[1]=d2&&t2?fmt(d2,t2):'';st.dates[2]=d3&&t3?fmt(d3,t3):'';
-  const block=document.getElementById('dates-block');if(block){block.style.pointerEvents='none';block.style.opacity='0.6';}
+  const block=document.getElementById('dates-block');if(block){const wrap=block.closest('.conv-msg')||block;wrap.style.pointerEvents='none';wrap.style.opacity='0.6';}
   addUserMsg(st.dates[0]+(st.dates[1]?' · '+st.dates[1]:'')+(st.dates[2]?' · '+st.dates[2]:''));
   setTimeout(()=>stepResumo(),400);
 }
