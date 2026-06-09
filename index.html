@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Studio Belle — Agendamento</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,7 +46,7 @@ input,textarea,select{font-size:16px!important;-webkit-text-size-adjust:100%}
 .conv-progress-bar{width:100px;height:2px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden}
 .conv-progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.5s cubic-bezier(.4,0,.2,1)}
 .conv-scroll{flex:1 1 0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;background:#dde4ea}
-.conv-stage{max-width:800px;margin:0 auto;padding:28px 20px 20px;display:flex;flex-direction:column;min-height:100%}
+.conv-stage{max-width:800px;margin:0 auto;padding:28px 20px 20px;display:flex;flex-direction:column}
 
 /* Cards de mensagem — referência visual */
 .conv-msg{display:flex;align-items:flex-start;gap:10px;margin-bottom:16px;animation:msgIn 0.38s cubic-bezier(.2,.7,.2,1) both}
@@ -432,7 +432,6 @@ function startFlow(){
       const btn=document.createElement('button');btn.className='conv-send-btn';
       btn.innerHTML='<svg viewBox="0 0 18 18" fill="none"><path d="M2 9l14-7-7 14V9H2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
       btn.onclick=submitNome;row.appendChild(input);row.appendChild(btn);inner.appendChild(row);
-      setTimeout(()=>input.focus(),300);
     });
   });
 }
