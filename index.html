@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -50,10 +49,10 @@ input,textarea,select{font-size:16px!important;-webkit-text-size-adjust:100%}
 .conv-stage{max-width:800px;margin:0 auto;padding:28px 20px 20px;display:flex;flex-direction:column}
 
 /* Cards de mensagem — referência visual */
-.conv-msg{display:flex;align-items:flex-start;gap:10px;margin-bottom:16px;animation:msgIn 0.38s cubic-bezier(.2,.7,.2,1) both}
+.conv-msg{display:flex;align-items:flex-start;gap:10px;margin-bottom:16px;animation:msgIn 0.38s cubic-bezier(.2,.7,.2,1) both;min-width:0}
 @keyframes msgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .conv-avatar{width:32px;height:32px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 38% 34%,#004F7A 0%,#001830 70%);border:1.5px solid rgba(0,119,170,0.65);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:14px;font-weight:600;font-style:italic;color:var(--off-white);margin-top:2px}
-.conv-bubble{max-width:72ch;padding:12px 16px;background:#0d2d45;border:1px solid rgba(255,255,255,0.12);border-radius:4px 16px 16px 16px;font-size:15px;line-height:1.6;color:rgba(255,255,255,0.96);font-weight:400}
+.conv-bubble{max-width:72ch;padding:12px 16px;background:#0d2d45;border:1px solid rgba(255,255,255,0.12);border-radius:4px 16px 16px 16px;font-size:15px;line-height:1.6;color:rgba(255,255,255,0.96);font-weight:400;min-width:0}
 .conv-bubble strong{color:#fff;font-weight:700}
 .conv-bubble em{font-style:italic;color:var(--accent-warm)}
 .conv-bubble.insight{background:#0a3050;border-color:rgba(61,186,255,0.3);font-size:14px}
@@ -179,14 +178,15 @@ input,textarea,select{font-size:16px!important;-webkit-text-size-adjust:100%}
 .conv-summary-label{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.55);flex:0 0 100px}
 .conv-summary-value{font-size:13.5px;font-weight:500;color:#fff;line-height:1.6;flex:1}
 
-/* ── Área de datas — superfície padronizada ── */
+/* ── Área de datas — CORREÇÃO RESPONSIVIDADE ── */
 .conv-dates-section{display:flex;flex-direction:column;gap:12px;margin-bottom:14px}
 .conv-date-row{display:flex;flex-direction:column;gap:6px}
 .conv-date-label{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.7)}
 .conv-date-label .req{color:var(--accent)}
 .conv-date-label .opt{color:rgba(255,255,255,0.38);font-weight:500}
-.conv-date-inputs{display:flex;gap:8px}
-.conv-date-input,.conv-time-input{flex:1;padding:11px 14px;background:rgba(0,0,0,0.25);border:1.5px solid rgba(255,255,255,0.15);border-radius:8px;color:#fff;font-family:var(--body);font-size:16px;font-weight:500;cursor:pointer;outline:none;transition:border-color 0.18s;-webkit-appearance:none;appearance:none;min-width:0;box-sizing:border-box}
+/* CORREÇÃO: flex-wrap garante quebra em telas muito estreitas; min-width:0 evita overflow dos inputs */
+.conv-date-inputs{display:flex;gap:8px;flex-wrap:wrap}
+.conv-date-input,.conv-time-input{flex:1 1 80px;padding:11px 14px;background:rgba(0,0,0,0.25);border:1.5px solid rgba(255,255,255,0.15);border-radius:8px;color:#fff;font-family:var(--body);font-size:16px;font-weight:500;cursor:pointer;outline:none;transition:border-color 0.18s;-webkit-appearance:none;appearance:none;min-width:0;width:0;box-sizing:border-box}
 .conv-date-input::placeholder,.conv-time-input::placeholder{color:rgba(255,255,255,0.35)}
 .conv-date-input:focus,.conv-time-input:focus{border-color:rgba(61,186,255,0.65)}
 .conv-date-input.field-error{border-color:rgba(220,50,70,0.8)}
@@ -532,7 +532,6 @@ function toggleSvcAccordion(key,svcs){
   if(!isOpen)item.classList.add('open');
 }
 
-// AJUSTE 2 — parentName adicionado para salvar "Serviço Principal → Procedimento"
 function toggleSubItem(parentKey,parentName,subName,time,subId){
   const stateKey=parentKey+'__'+subName.replace(/\s+/g,'_');
   const subItem=document.getElementById('svc-sub-item-'+subId);
@@ -543,7 +542,7 @@ function toggleSubItem(parentKey,parentName,subName,time,subId){
     if(subItem)subItem.classList.remove('selected');
   }else{
     st.tmpServices[stateKey]={
-      name:parentName+' \u2014 '+subName,  // "Corte — Feminino"
+      name:parentName+' \u2014 '+subName,
       parentKey:parentKey,
       parentName:parentName,
       subName:subName,
@@ -613,11 +612,14 @@ function stepDatas(){
     const stage=document.getElementById('conv-stage');
     const wrapper=document.createElement('div');
     wrapper.className='conv-msg';
-    wrapper.style.animation='msgIn 0.38s cubic-bezier(.2,.7,.2,1) both';
+    /* CORREÇÃO: min-width:0 impede que o flex item (wrapper) expanda além do conv-stage */
+    wrapper.style.cssText='animation:msgIn 0.38s cubic-bezier(.2,.7,.2,1) both;min-width:0;';
     wrapper.innerHTML='<div class="conv-avatar">S</div>';
     const bubble=document.createElement('div');
     bubble.className='conv-bubble';
-    bubble.style.cssText='max-width:100%;flex:1;padding:16px 18px;';
+    /* CORREÇÃO: min-width:0 + width:0 + flex:1 = garante contenção total dentro do flex item;
+       overflow:hidden previne vazamento de qualquer filho que tente expandir além */
+    bubble.style.cssText='max-width:100%;flex:1;min-width:0;width:0;padding:16px 18px;overflow:hidden;';
     bubble.id='dates-block';
     bubble.innerHTML='<div class="conv-form-hint">Apenas a <span class="hl">1a opcao</span> e obrigatoria.</div><div class="conv-dates-section"><div class="conv-date-row"><span class="conv-date-label">1a opcao <span class="req">*</span></span><div class="conv-date-inputs"><input class="conv-date-input" id="d1" readonly placeholder="Data" onclick="openDatePicker(1)"><input class="conv-time-input" id="t1" readonly placeholder="Horario" onclick="openTimePicker(1)"></div></div><div class="conv-date-row"><span class="conv-date-label">2a opcao <span class="opt">(opcional)</span></span><div class="conv-date-inputs"><input class="conv-date-input" id="d2" readonly placeholder="Data" onclick="openDatePicker(2)"><input class="conv-time-input" id="t2" readonly placeholder="Horario" onclick="openTimePicker(2)"></div></div><div class="conv-date-row"><span class="conv-date-label">3a opcao <span class="opt">(opcional)</span></span><div class="conv-date-inputs"><input class="conv-date-input" id="d3" readonly placeholder="Data" onclick="openDatePicker(3)"><input class="conv-time-input" id="t3" readonly placeholder="Horario" onclick="openTimePicker(3)"></div></div></div><div class="conv-date-error" id="date-error"></div><button class="conv-action-btn" onclick="submitDatas()">Confirmar disponibilidade</button>';
     wrapper.appendChild(bubble);
