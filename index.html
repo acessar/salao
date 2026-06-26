@@ -421,7 +421,7 @@ function startFlow(){
   setProgress(5,'Iniciando...');
   sendMessages([
     {html:'Ola! Seja muito bem-vinda ao Studio Belle ✨',delay:0},
-    {html:'Estou aqui para te ajudar a montar seu atendimento perfeito. Vai levar so alguns minutinhos.',delay:1200},
+    {html:'Estou aqui para te ajudar a montar seu atendimento. Vai levar so alguns minutinhos.',delay:1200},
     {html:'<strong>Como posso te chamar?</strong>',delay:2400},
   ],()=>{
     renderAnswerArea((inner)=>{
@@ -444,8 +444,8 @@ function submitNome(){
   st.nome=val;addUserMsg(val);clearAnswerArea();setProgress(12,'Etapa 1 de 4');
   setTimeout(()=>{
     sendMessages([
-      {html:'Prazer, <strong>'+esc(st.nome)+'</strong>! \uD83D\uDC9B',delay:0},
-      {html:'Vamos montar seu atendimento. <em>Me conta o que voce gostaria de fazer hoje?</em>',delay:1000},
+      {html:'Prazer, <strong>'+esc(st.nome)+'</strong>! ',delay:0},
+      {html:'Vamos montar seu atendimento. Me conta o que voce gostaria de fazer hoje?',delay:1000},
     ],()=>stepCategoria());
   },400);
 }
@@ -486,7 +486,7 @@ function stepProfissional(){
       card.onclick=()=>{
         st.tmpProf=p.val;addUserMsg(p.name);clearAnswerArea();
         setTimeout(()=>{
-          sendMessages([{html:'Perfeito \uD83D\uDC9B Agora me conta: <strong>que procedimentos de '+CAT_LABELS[st.tmpCat].toLowerCase()+' voce quer incluir?</strong>',delay:0}],()=>stepServicos());
+          sendMessages([{html:'Perfeito Agora me conta: <strong>que procedimentos de '+CAT_LABELS[st.tmpCat].toLowerCase()+' voce quer incluir?</strong>',delay:0}],()=>stepServicos());
         },400);
       };
       cards.appendChild(card);
