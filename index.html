@@ -75,13 +75,25 @@ html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
   --bevel-left-hi:rgba(220,232,244,0.28);
   --bevel-right-hi:rgba(6,10,16,0.4);
   --bevel-bottom-hi:rgba(2,4,8,0.62);
+
+  /* ══════════════════════════════════════════════════════════════
+     WALLPAPER DA CONVERSA — branco levemente azulado, estático.
+     Base quase-branca (percepção continua sendo "branco") com um
+     traço mínimo de matiz azulado para harmonizar com os cards, e
+     um véu diagonal extremamente sutil que sugere acabamento
+     liso/polido/sedoso, sem criar gradiente ou brilho perceptível.
+     ══════════════════════════════════════════════════════════════ */
+  --wallpaper-base:#CFE2F3;
+  --wallpaper:
+    linear-gradient(128deg,rgba(255,255,255,0.22) 0%,rgba(255,255,255,0) 30%,rgba(255,255,255,0) 70%,rgba(255,255,255,0.14) 100%),
+    var(--wallpaper-base);
 }
 body{font-family:var(--body);background:var(--bg);color:var(--off-white);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;min-height:100dvh;overflow-x:hidden}
 ::selection{background:var(--accent);color:var(--bg)}
 input,textarea,select{font-size:16px!important;-webkit-text-size-adjust:100%}
 
 /* CONV SCREEN */
-#screen-conv{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;background:#dde4ea;overflow:hidden}
+#screen-conv{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;background:var(--wallpaper-base);overflow:hidden}
 .conv-masthead{position:relative;flex-shrink:0;z-index:10;background:radial-gradient(150% 160% at 14% -40%,rgba(255,255,255,0.07) 0%,rgba(255,255,255,0) 42%),linear-gradient(180deg,rgba(17,79,135,0.97) 0%,rgba(8,43,76,0.98) 100%);backdrop-filter:blur(12px);border-bottom:1px solid var(--bevel-bottom);border-radius:0 0 14px 14px;box-shadow:inset 0 1px 0 0 var(--bevel-inner-top),inset 0 -1px 2px 0 var(--bevel-inner-bottom),0 6px 16px -8px rgba(0,8,18,0.45)}
 .conv-masthead-inner{max-width:800px;margin:0 auto;padding:0 20px;height:58px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .conv-brand{display:flex;align-items:center;gap:10px;cursor:pointer}
@@ -92,7 +104,7 @@ input,textarea,select{font-size:16px!important;-webkit-text-size-adjust:100%}
 .conv-step-label{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:rgba(255,255,255,0.3)}
 .conv-progress-bar{width:100px;height:2px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden}
 .conv-progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.5s cubic-bezier(.4,0,.2,1)}
-.conv-scroll{flex:1 1 0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;background:#dde4ea}
+.conv-scroll{flex:1 1 0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;background:var(--wallpaper)}
 .conv-stage{max-width:800px;margin:0 auto;padding:28px 20px 20px;display:flex;flex-direction:column}
 
 /* Cards de mensagem — referência visual */
