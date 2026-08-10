@@ -281,7 +281,7 @@ input,textarea,select{font-size:16px!important;-webkit-text-size-adjust:100%}
 .prof-card{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--surface-card);border:1px solid;border-color:var(--bevel-top) var(--bevel-right) var(--bevel-bottom) var(--bevel-left);border-radius:var(--r-md);cursor:pointer;transition:filter 0.2s ease,border-color 0.2s ease,box-shadow 0.2s;-webkit-tap-highlight-color:transparent;box-shadow:inset 0 1px 0 0 var(--bevel-inner-top),inset 0 -1px 2px 0 var(--bevel-inner-bottom),var(--bevel-outer-1),var(--bevel-outer-2)}
 .prof-card:hover{filter:brightness(1.16);--bevel-top:var(--bevel-top-hi);--bevel-left:var(--bevel-left-hi);--bevel-right:var(--bevel-right-hi);--bevel-bottom:var(--bevel-bottom-hi)}
 .prof-card.selected{filter:brightness(1.1);--bevel-top:var(--bevel-top-hi);--bevel-left:var(--bevel-left-hi);--bevel-right:var(--bevel-right-hi);--bevel-bottom:var(--bevel-bottom-hi)}
-.prof-avatar{width:36px;height:36px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,rgba(0,168,216,0.3),rgba(0,79,122,0.55));border:1.5px solid rgba(224,247,255,0.28);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:15px;font-weight:600;font-style:italic;color:rgba(224,247,255,0.9)}
+.prof-avatar{width:36px;height:36px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,rgba(0,168,216,0.3),rgba(0,79,122,0.55));border:1.5px solid rgba(224,247,255,0.28);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:15px;font-weight:600;font-style:italic;color:rgba(224,247,255,0.9);background-size:cover;background-position:center}
 .prof-name{font-size:15px;font-weight:600;color:#fff;flex:1}
 .conv-inline-block{margin-top:4px;margin-bottom:20px;animation:msgIn 0.38s cubic-bezier(.2,.7,.2,1) both}
 .conv-inline-block.indent{padding-left:42px}
@@ -306,10 +306,9 @@ input,textarea,select{font-size:16px!important;-webkit-text-size-adjust:100%}
   <header class="conv-masthead">
     <div class="conv-masthead-inner">
       <div class="conv-brand">
-        <div class="conv-brand-logo">S</div>
+        <div class="conv-brand-logo" id="brand-logo"></div>
         <div class="conv-brand-info">
           <div class="conv-brand-name">Studio Belle</div>
-          <div class="conv-brand-status">&#9679; online agora</div>
         </div>
       </div>
       <div class="conv-progress-area">
@@ -355,6 +354,11 @@ input,textarea,select{font-size:16px!important;-webkit-text-size-adjust:100%}
 
 <script>
 const WHATSAPP='558393690482';
+const LOGO_DATA_URI='data:image/jpeg;base64,__LOGO_B64__';
+const PROF_PHOTOS={
+  leticia:'https://randomuser.me/api/portraits/women/44.jpg',
+  julia:'https://randomuser.me/api/portraits/women/68.jpg'
+};
 const GLOBAL_PROFESSIONALS=[{val:'leticia',name:'Leticia'},{val:'julia',name:'Julia'},{val:'sem',name:'Sem preferencia'}];
 const PROFESSIONALS={cabelo:GLOBAL_PROFESSIONALS,unhas:GLOBAL_PROFESSIONALS,sobrancelhas:GLOBAL_PROFESSIONALS,estetica:GLOBAL_PROFESSIONALS};
 const SERVICES={
@@ -410,6 +414,8 @@ let convTimerID=null;
 
 window.addEventListener('load',()=>{
   document.body.style.overflow='hidden';
+  const logoEl=document.getElementById('brand-logo');
+  if(logoEl){logoEl.style.backgroundImage='url('+LOGO_DATA_URI+')';logoEl.style.backgroundSize='cover';logoEl.style.backgroundPosition='center';}
   setTimeout(()=>startFlow(),350);
 });
 
@@ -421,7 +427,7 @@ function showTyping(){
   removeTyping();
   const el=document.createElement('div');
   el.id='conv-typing';el.className='conv-typing';
-  el.innerHTML='<div class="conv-avatar">S</div><div class="conv-typing-dots"><div class="conv-typing-dot"></div><div class="conv-typing-dot"></div><div class="conv-typing-dot"></div></div>';
+  el.innerHTML='<div class="conv-avatar" style="background-image:url('+LOGO_DATA_URI+');background-size:cover;background-position:center"></div><div class="conv-typing-dots"><div class="conv-typing-dot"></div><div class="conv-typing-dot"></div><div class="conv-typing-dot"></div></div>';
   document.getElementById('conv-stage').appendChild(el);scrollBottom();
 }
 function removeTyping(){const el=document.getElementById('conv-typing');if(el)el.remove();}
@@ -429,7 +435,7 @@ function addBotMsg(html,isInsight=false){
   removeTyping();
   const stage=document.getElementById('conv-stage');
   const w=document.createElement('div');w.className='conv-msg';
-  w.innerHTML='<div class="conv-avatar">S</div><div class="conv-bubble'+(isInsight?' insight':'')+'">'+html+'</div>';
+  w.innerHTML='<div class="conv-avatar" style="background-image:url('+LOGO_DATA_URI+');background-size:cover;background-position:center"></div><div class="conv-bubble'+(isInsight?' insight':'')+'">'+html+'</div>';
   stage.appendChild(w);scrollBottom();
 }
 function addUserMsg(text){
@@ -571,8 +577,13 @@ function stepProfissional(){
     const cards=document.createElement('div');cards.className='prof-cards';
     profs.forEach(p=>{
       const card=document.createElement('div');card.className='prof-card';
-      const initials=p.val==='sem'?'\u2726':p.name[0];
-      card.innerHTML='<div class="prof-avatar">'+initials+'</div><div class="prof-name">'+esc(p.name)+'</div>';
+      const photo=PROF_PHOTOS[p.val];
+      if(photo){
+        card.innerHTML='<div class="prof-avatar" style="background-image:url(\''+photo+'\')"></div><div class="prof-name">'+esc(p.name)+'</div>';
+      }else{
+        const initials=p.val==='sem'?'\u2726':p.name[0];
+        card.innerHTML='<div class="prof-avatar">'+initials+'</div><div class="prof-name">'+esc(p.name)+'</div>';
+      }
       card.onclick=()=>{
         st.tmpProf=p.val;addUserMsg(p.name);clearAnswerArea();
         setTimeout(()=>{
@@ -708,7 +719,7 @@ function stepDatas(){
     wrapper.className='conv-msg';
     /* CORREÇÃO: min-width:0 impede que o flex item (wrapper) expanda além do conv-stage */
     wrapper.style.cssText='animation:msgIn 0.38s cubic-bezier(.2,.7,.2,1) both;min-width:0;';
-    wrapper.innerHTML='<div class="conv-avatar">S</div>';
+    wrapper.innerHTML='<div class="conv-avatar" style="background-image:url('+LOGO_DATA_URI+');background-size:cover;background-position:center"></div>';
     const bubble=document.createElement('div');
     bubble.className='conv-bubble';
     /* CORREÇÃO: min-width:0 + width:0 + flex:1 = garante contenção total dentro do flex item;
