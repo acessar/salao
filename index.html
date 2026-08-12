@@ -7,9 +7,9 @@
 
 <!-- ═══════════════════════════════════════════════════════════════
      PRÉVIA DE COMPARTILHAMENTO (WhatsApp, Facebook, etc.)
-     IMPORTANTE: troque "https://SEU-DOMINIO-AQUI.com/studio-belle-logo.jpg"
-     pela URL pública real da logo (arquivo studio-belle-logo.jpg,
-     entregue junto com este HTML) depois de hospedá-la no seu site.
+     Logo hospedada em: https://acessar.github.io/salao/studio-belle-logo.jpg
+     (suba o arquivo studio-belle-logo.jpg na raiz deste mesmo repositório
+     GitHub Pages, ao lado do index.html, para que a URL abaixo funcione).
      WhatsApp/Facebook só conseguem gerar a prévia a partir de uma
      URL http(s) pública e acessível — não funciona com Data URI/base64,
      por isso a imagem precisa estar hospedada separadamente.
@@ -17,14 +17,14 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Studio Belle — Agendamento">
 <meta property="og:description" content="Agende seu horário no Studio Belle: cabelo, unhas, sobrancelhas, cílios, estética e maquiagem. Atendimento rápido e personalizado.">
-<meta property="og:image" content="https://SEU-DOMINIO-AQUI.com/studio-belle-logo.jpg">
+<meta property="og:image" content="https://acessar.github.io/salao/studio-belle-logo.jpg">
 <meta property="og:image:width" content="736">
 <meta property="og:image:height" content="736">
-<meta property="og:url" content="https://SEU-DOMINIO-AQUI.com/">
+<meta property="og:url" content="https://acessar.github.io/salao/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Studio Belle — Agendamento">
 <meta name="twitter:description" content="Agende seu horário no Studio Belle: cabelo, unhas, sobrancelhas, cílios, estética e maquiagem.">
-<meta name="twitter:image" content="https://SEU-DOMINIO-AQUI.com/studio-belle-logo.jpg">
+<meta name="twitter:image" content="https://acessar.github.io/salao/studio-belle-logo.jpg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -422,14 +422,14 @@ function saudacaoPorHorario(){
 }
 function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
 // pequenas variacoes de reconhecimento, para a conversa nao soar repetitiva/robotica
-const ACK_CATEGORIA=['Ótima escolha ✨','adorei ✨','boa pedida ✨','vai ficar lindo ✨'];
-const ACK_SERVICOS=['Anotado!','Combinado!','Ótimo, ja registrei aqui!','Perfeito, ja esta na sua lista!'];
+const ACK_CATEGORIA=['otima escolha ✨','adorei ✨','boa pedida ✨','vai ficar lindo ✨'];
+const ACK_SERVICOS=['Anotado!','Combinado!','Show, ja registrei aqui!','Perfeito, ja esta na sua lista!'];
 // pequeno comentario contextual por categoria \u2014 so tom/acolhimento, nenhuma promessa ou fato novo
 const CAT_COMMENTS={
-cabelo: 'Seu estilo começa nos detalhes',
-unhas: 'Detalhes que completam o seu estilo',
-sobrancelhas: 'O olhar também fala por você',
-estetica: 'Cuidado que começa por você \u2728',
+  cabelo:'Cabelo novo, energia renovada',
+  unhas:'Maos e pes cuidados fazem toda diferenca',
+  sobrancelhas:'Um detalhe que muda o olhar todo',
+  estetica:'Um momento so seu, de cuidado e leveza \u2728',
 };
 
 let st={nome:'',bookings:[],dates:['','',''],tmpCat:null,tmpProf:null,tmpServices:{}};
@@ -539,8 +539,8 @@ function buildChipsArea(inner,{hint,options,timed,multi,onSubmit}){
 function startFlow(){
   setProgress(5,'Iniciando...');
   sendMessages([
-    {html:saudacaoPorHorario()+'! Espero que esteja tudo bem com você!✨',delay:0},
-    {html:'No Studio Belle, cada detalhe é pensado para valorizar sua individualidade e fazer com que cada momento aqui seja especial.',delay:1200},
+    {html:saudacaoPorHorario()+'! Seja muito bem-vinda ao Studio Belle ✨',delay:0},
+    {html:'Vou te ajudar a montar seu atendimento certinho, do jeito que voce precisa. So leva alguns minutinhos.',delay:1200},
     {html:'Pra comecar, <strong>como posso te chamar?</strong>',delay:2400},
   ],()=>{
     renderAnswerArea((inner)=>{
