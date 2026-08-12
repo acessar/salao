@@ -4,6 +4,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Studio Belle — Agendamento</title>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PRÉVIA DE COMPARTILHAMENTO (WhatsApp, Facebook, etc.)
+     IMPORTANTE: troque "https://SEU-DOMINIO-AQUI.com/studio-belle-logo.jpg"
+     pela URL pública real da logo (arquivo studio-belle-logo.jpg,
+     entregue junto com este HTML) depois de hospedá-la no seu site.
+     WhatsApp/Facebook só conseguem gerar a prévia a partir de uma
+     URL http(s) pública e acessível — não funciona com Data URI/base64,
+     por isso a imagem precisa estar hospedada separadamente.
+     ═══════════════════════════════════════════════════════════════ -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Studio Belle — Agendamento">
+<meta property="og:description" content="Agende seu horário no Studio Belle: cabelo, unhas, sobrancelhas, cílios, estética e maquiagem. Atendimento rápido e personalizado.">
+<meta property="og:image" content="https://SEU-DOMINIO-AQUI.com/studio-belle-logo.jpg">
+<meta property="og:image:width" content="736">
+<meta property="og:image:height" content="736">
+<meta property="og:url" content="https://SEU-DOMINIO-AQUI.com/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Studio Belle — Agendamento">
+<meta name="twitter:description" content="Agende seu horário no Studio Belle: cabelo, unhas, sobrancelhas, cílios, estética e maquiagem.">
+<meta name="twitter:image" content="https://SEU-DOMINIO-AQUI.com/studio-belle-logo.jpg">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
@@ -309,6 +331,7 @@ input,textarea,select{font-size:16px!important;-webkit-text-size-adjust:100%}
         <div class="conv-brand-logo" id="brand-logo"></div>
         <div class="conv-brand-info">
           <div class="conv-brand-name">Studio Belle</div>
+          <div class="conv-brand-status">&#9679; online agora</div>
         </div>
       </div>
       <div class="conv-progress-area">
@@ -399,8 +422,8 @@ function saudacaoPorHorario(){
 }
 function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
 // pequenas variacoes de reconhecimento, para a conversa nao soar repetitiva/robotica
-const ACK_CATEGORIA=['Ótima escolha ✨','Adorei ✨','Boa pedida ✨','Vai ficar lindo ✨'];
-const ACK_SERVICOS=['Anotado!','Combinado!','Ótimo, ja registrei aqui!','Perfeito, já esta na sua lista!'];
+const ACK_CATEGORIA=['Ótima escolha ✨','adorei ✨','boa pedida ✨','vai ficar lindo ✨'];
+const ACK_SERVICOS=['Anotado!','Combinado!','Ótimo, ja registrei aqui!','Perfeito, ja esta na sua lista!'];
 // pequeno comentario contextual por categoria \u2014 so tom/acolhimento, nenhuma promessa ou fato novo
 const CAT_COMMENTS={
 cabelo: 'Seu estilo começa nos detalhes',
@@ -516,7 +539,7 @@ function buildChipsArea(inner,{hint,options,timed,multi,onSubmit}){
 function startFlow(){
   setProgress(5,'Iniciando...');
   sendMessages([
-    {html:saudacaoPorHorario()+'! Espero que esteja tudo bem.',delay:0},
+    {html:saudacaoPorHorario()+'! Espero que esteja tudo bem com você!✨',delay:0},
     {html:'No Studio Belle, cada detalhe é pensado para valorizar sua individualidade e fazer com que cada momento aqui seja especial.',delay:1200},
     {html:'Pra comecar, <strong>como posso te chamar?</strong>',delay:2400},
   ],()=>{
