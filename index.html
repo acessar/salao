@@ -399,14 +399,14 @@ function saudacaoPorHorario(){
 }
 function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
 // pequenas variacoes de reconhecimento, para a conversa nao soar repetitiva/robotica
-const ACK_CATEGORIA=['otima escolha ✨','adorei ✨','boa pedida ✨','vai ficar lindo ✨'];
-const ACK_SERVICOS=['Anotado!','Combinado!','Show, ja registrei aqui!','Perfeito, ja esta na sua lista!'];
+const ACK_CATEGORIA=['Ótima escolha ✨','Adorei ✨','Boa pedida ✨','Vai ficar lindo ✨'];
+const ACK_SERVICOS=['Anotado!','Combinado!','Ótimo, ja registrei aqui!','Perfeito, já esta na sua lista!'];
 // pequeno comentario contextual por categoria \u2014 so tom/acolhimento, nenhuma promessa ou fato novo
 const CAT_COMMENTS={
-  cabelo:'Cabelo novo, energia renovada',
-  unhas:'Maos e pes cuidados fazem toda diferenca',
-  sobrancelhas:'Um detalhe que muda o olhar todo',
-  estetica:'Um momento so seu, de cuidado e leveza \u2728',
+cabelo: 'Seu estilo começa nos detalhes',
+unhas: 'Detalhes que completam o seu estilo',
+sobrancelhas: 'O olhar também fala por você',
+estetica: 'Cuidado que começa por você \u2728',
 };
 
 let st={nome:'',bookings:[],dates:['','',''],tmpCat:null,tmpProf:null,tmpServices:{}};
